@@ -1,7 +1,8 @@
 class URL:
-    MAIN   = "http://www.letskorail.com"
-    SEARCH = MAIN + "/ebizprd/EbizPrdTicketPr21111_i1.do"
-    SEAT   = MAIN + "/ebizprd/EbizPrdTicketPr12212_i1.do"
+    MAIN     = "http://www.letskorail.com"
+    SEARCH   = MAIN + "/ebizprd/EbizPrdTicketPr21111_i1.do"
+    SEAT     = MAIN + "/ebizprd/EbizPrdTicketPr12212_i1.do"
+    SCHEDULE = MAIN + "/ebizprd/EbizPrdTicketPr11131_i1.do"
 
     def __init__(self):
         raise NotImplementedError("Do not make instance")
@@ -16,6 +17,12 @@ class PATTERN:
 
 
 class HEADER:
+    DEFAULT = {
+        "Cache-Control": "max-age=0",
+        "Upgrade-Insecure-Requests": "1",
+        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/61.0.3163.91 Safari/537.36"
+    }
+    
     SEARCH = [
         "txtGoAbrdDt",
         "txtGoStartCode",
@@ -42,8 +49,8 @@ class HEADER:
         "h_trn_no",
         "h_yms_apl_flg",
         "h_trn_clsf_cd",
-        "h_seat_att_cd",
         "h_trn_gp_cd",
+        "h_seat_att_cd",
         "h_run_dt",
         "h_dpt_dt",
         "h_dpt_tm",
@@ -158,10 +165,14 @@ class TRAIN_TYPE:
         "전체": "05",
         "공학직통": "06",
         "KTX-산천": "07",
+        "ITX-새마을": "08",
         "ITX-청춘": "09",
+        # "KTX-산천": "10",
     }
     CODE2NAME = dict(zip(NAME2CODE.values(), NAME2CODE.keys()))
-
+    CODE2NAME.update({
+        "10": "KTX-산천"
+    })
     def __init__(self):
         raise NotImplementedError("Do not make instance")
 
@@ -507,6 +518,7 @@ class STATION_TYPE:
     def __init__(self):
         raise NotImplementedError("Do not make instance")
 
+
 class DAY:
     NAME2CODE = {
         "일": "0",
@@ -519,6 +531,23 @@ class DAY:
     }
 
     CODE2NAME = dict(zip(NAME2CODE.values(), NAME2CODE.keys()))
+
+    def __init__(self):
+        raise NotImplementedError("Do not make instance")
+
+
+class SEAT:
+    NORMAL = {
+        "무궁화호": [1, 2, 3, 5, 6, 7, 8],
+        "KTX": [1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+        "KTX-산천": [1, 2, 4, 5, 6, 7]
+    }
+
+    SPECIAL = {
+        "무궁화호": [1, 2, 3, 5, 6, 7, 8],
+        "KTX": [1, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17],
+        "KTX-산천": [1, 2, 4, 5, 6, 7]
+    }
 
     def __init__(self):
         raise NotImplementedError("Do not make instance")
