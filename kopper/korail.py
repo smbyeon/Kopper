@@ -16,8 +16,8 @@ from PIL import Image
 from bs4 import BeautifulSoup
 from datetime import datetime, timedelta
 
-from group import *
-from train_info import *
+from kopper.group import *
+from kopper.train_info import *
 
 class Korail():
 

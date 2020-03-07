@@ -5,7 +5,7 @@ import requests
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 
-from group import *
+from kopper.group import *
 
 class TrainSchedule:
     """
