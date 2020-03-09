@@ -12,10 +12,10 @@ class PARAMETERS(enum.Enum):
         'selGoSeat1': '015',
         'selGoTrain': '',   # train type code
         'selGoYear': '',    # selected depart year
-        'start': '',        # selected depart date (yyyy.M.d)
-        'txtGoAbrdDt': '', # selected depart date (yyyyMMdd)
+        'start': '',        # selected depart date (YYYY.m.d)
+        'txtGoAbrdDt': '', # selected depart date (YYYYmmdd)
         'txtGoEnd': '',     # arrival station name
-        'txtGoHour': '',    # selected depart time (HHmmss)
+        'txtGoHour': '',    # selected depart time (HHMMSS)
         'txtGoPage': '1',
         'txtGoStart': '',   # department station name
         'txtGoYoil': '',    # selected a day of the week.
@@ -32,6 +32,14 @@ class PARAMETERS(enum.Enum):
         'txtSeatAttCd_4': '015',
     }
 
+    route_info = {
+        # 'txtRunDt' and 'txtDptDt' can have the same value.
+        'txtRunDt': '',     # YYYYmmdd 
+        'txtDptDt': '',     # YYYYmmdd
+        'txtTrnNo': '',     # train's no
+        'txtTrnGpCd': ''    # train's group code
+    }
+    
     seat_info = {
         'arrSrcarNo': [1, 2, 3, 5, 6, 7, 8],
         'txtArvRsStnCd': '0020',

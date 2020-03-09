@@ -1,5 +1,6 @@
 import enum
 
+# TODO Need to be supplemented, about 울산(통도사) -> 울산_통도사.
 class STATIONS(enum.Enum):
     가평 = '0150',
     각계 = '0309',

@@ -53,3 +53,10 @@ class PARSING_MAP(enum.Enum):
         "h_stnd_rest_seat_cnt",
         "h_free_rest_seat_cnt"
     ]
+
+    route_info = [
+        'station_name',
+        'arrival_time',
+        'depart_time',
+        'delay_minutes',
+    ]
