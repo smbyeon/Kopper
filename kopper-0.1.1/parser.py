@@ -60,7 +60,58 @@ def parsing_raw_train_routes(html):
     if not routes:
         raise ValueError("""Schedule information is not responsed.
             Probably the parmaters of Crawler.schedule's passed are not valid.
-            Please execute Crawler.trains_info function and pass train_info instance to Crawler.schedule, again.
+            Please execute Crawler.trains_info function and pass train_info instance to Crawler.train_routes, again.
             """)
 
     return routes
+
+
+def parsing_raw_srcar_length(html):
+    soup = BeautifulSoup(html, "html.parser")
+    
+    input_tag = soup.find('input', {'type': 'hidden', 'name': 'arrSrcarNo'})
+    
+    srcars = input_tag['value'].split(',')
+
+    if not srcars:
+        raise ValueError("""Srcar-Length information is not responsed.
+            Probably train_info is not valid.
+            Please execute Crawler.trains_info function and pass train_info instance to Crawler.train_srcar_length, again.
+            """)
+
+    return srcars
+
+
+def parsing_raw_seat_info_by_srcar(html):
+    seat_status = {}
+
+    soup = BeautifulSoup(html, "html.parser")
+    
+    div_tag = soup.find('div', {'id': 'seat_box_id'})
+
+    span_tags_on = div_tag.find_all("span", {"class": "ck_seat_td1_on"})
+    span_tags_on += div_tag.find_all("span", {"class": "ck_seat_td2_on"})
+
+    span_tags_off = div_tag.find_all("span", {"class": "ck_seat_td1_off"})
+    span_tags_off += div_tag.find_all("span", {"class": "ck_seat_td2_off"})
+
+    for span_tag in span_tags_on:
+        seat_no = span_tag.text.strip()
+        seat_status[seat_no] = 0        # empty seat
+
+    for span_tag in span_tags_off:
+        seat_no = span_tag.text.strip()
+        seat_status[seat_no] = 1       # full seat
+
+    return seat_status
+
+
+def parsing_raw_seats_info_by_schedule(raw_seats_info):
+    seats_status = {}
+
+    for route, seats_info in raw_seats_info.items():
+        seats_status[route] = {}
+        for srcar_no, seat_info in seats_info.items():
+            seats_status[route][srcar_no] = parsing_raw_seat_info_by_srcar(seat_info)
+    
+    return seats_status

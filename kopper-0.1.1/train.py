@@ -6,7 +6,7 @@ from constants.train_type import TRAIN_TYPE
 class Train(object):
 
     def __init__(self, raw_train_info):
-        self.raw_train_info = raw_train_info
+        self._raw_train_info = raw_train_info
         self._initialize()
     
     def _initialize(self):
@@ -26,9 +26,14 @@ class Train(object):
         self._train_type_code = raw_info['h_trn_clsf_cd']
         self._train_type_name = get_name_from_code(TRAIN_TYPE, self._train_type_code)
         self._train_group_code = raw_info['h_trn_gp_cd']
+        self._train_classification_code = raw_info['h_trn_clsf_cd']
 
         self._run_date = datetime.strptime(raw_info['h_run_dt'], '%Y%m%d')
         self._delay_hour = datetime.strptime(raw_info['h_dlay_hr'], '%H%M%S')
+
+    @property
+    def raw_train_info(self):
+        return self._raw_train_info
 
     @property
     def arrival_date(self):
@@ -77,6 +82,10 @@ class Train(object):
     @property
     def train_group_code(self):
         return self._train_group_code
+
+    @property
+    def train_classification_code(self):
+        return self._train_classification_code
 
     @property
     def run_date(self):

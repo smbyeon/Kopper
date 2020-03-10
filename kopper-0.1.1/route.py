@@ -6,6 +6,12 @@ class Route(object):
 
     def __init__(self, raw_route_info):
         self._raw_route_info = raw_route_info
+        self._seats_info = {}
+
+        self._depart_order = self._arrival_order = 0
+        self._next_station_code = 0
+        self._next_station_name = ''
+
         self._initalize()
 
     def _initalize(self):
@@ -49,6 +55,47 @@ class Route(object):
     def delay_minutes(self):
         return self._delta_delay_minutes.seconds // 60
 
+    
+    @property
+    def depart_order(self):
+        return self._depart_order
+    
+    @property
+    def arrival_order(self):
+        return self._arrival_order
+
+    @property
+    def next_station_code(self):
+        return self._next_station_code
+
+    @property
+    def next_station_name(self):
+        return self._next_station_name
+
+    @property
+    def seats_info(self):
+        return self._seats_info
+        
+    @depart_order.setter
+    def depart_order(self, order):
+        self._depart_order = order
+    
+    @arrival_order.setter
+    def arrival_order(self, order):
+        self._arrival_order = order
+
+    @next_station_code.setter
+    def next_station_code(self, code):
+        self._next_station_code = code
+
+    @next_station_name.setter
+    def next_station_name(self, name):
+        self._next_station_name = name
+
+    @seats_info.setter
+    def seats_info(self, info):
+        self._seats_info = info
+
 
     def __eq__(self, other):
         if (isinstance(other, self.__class__)):
@@ -57,3 +104,11 @@ class Route(object):
 
     def __lt__(self, other):
         return self.arrival_time < other.arrival_time
+
+    def __hash__(self):
+        return hash((
+            self.station_name, 
+            self.station_code, 
+            self.depart_time, 
+            self.arrival_time
+        ))

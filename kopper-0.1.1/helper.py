@@ -1,5 +1,5 @@
 from route import Route
-
+from parser import parsing_raw_seat_info_by_srcar
 def get_name_from_code(enum_cls, code):
     names_single = [name for name, member in enum_cls.__members__.items()
         if member.value == code]
@@ -19,19 +19,3 @@ def get_name_from_code(enum_cls, code):
 def get_routes(raw_train_routes):
     return [ Route(raw_route_info) for raw_route_info in raw_train_routes ]
 
-    
-
-if __name__ == "__main__":
-    from constants.trains import TRAINS
-    print (get_name_from_code(TRAINS, "01"))
-    print (get_name_from_code(TRAINS, "10"))
-    print (get_name_from_code(TRAINS, "09"))
-    # print (get_name_from_code(trains, "11"))
-
-    from constants.stations import STATIONS
-    print (get_name_from_code(STATIONS, "0139"))
-    print (get_name_from_code(STATIONS, "0011"))
-    # print (get_name_from_code(stations, "9999"))
-
-    from constants.days import DAYS
-    print (get_name_from_code(DAYS, 0))

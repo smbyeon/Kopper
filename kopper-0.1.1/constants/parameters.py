@@ -18,7 +18,7 @@ class PARAMETERS(enum.Enum):
         'txtGoHour': '',    # selected depart time (HHMMSS)
         'txtGoPage': '1',
         'txtGoStart': '',   # department station name
-        'txtGoYoil': '',    # selected a day of the week.
+        'txtGoYoil': '',    # selected a day of the week
         'txtMenuId': '11',
         'txtPsgCnt1': '1',
         'txtPsgCnt2': '0',
@@ -34,26 +34,45 @@ class PARAMETERS(enum.Enum):
 
     route_info = {
         # 'txtRunDt' and 'txtDptDt' can have the same value.
-        'txtRunDt': '',     # YYYYmmdd 
         'txtDptDt': '',     # YYYYmmdd
+        'txtRunDt': '',     # YYYYmmdd 
+        'txtTrnGpCd': '',   # train's group code
         'txtTrnNo': '',     # train's no
-        'txtTrnGpCd': ''    # train's group code
+    }
+
+    srcar_length_info = {
+        'radJobId': '1',
+        'txtArvRsStnCd': '',        # arrival station code (NNNN: zero filed)
+        'txtArvStnRunOrdr': '',     # used by train instance (NNNNNN:zero filed)
+        'txtArvTm': '',             # arrival time (HHMMSS)
+        'txtDptDt': '',             # depart date (YYYYmmdd)
+        'txtDptRsStnCd': '',        # depart station code (NNNN: zero filed)
+        'txtDptStnRunOrdr': '',     # used by train instance (NNNNNN:zero filed)
+        'txtDptTm': '',             # depart time (HHMMSS)
+        'txtPsrmClCd': '1',
+        'txtRunDt': '',             # depart date (YYYYmmdd)
+        'txtSeatAttCd': '015',
+        'txtSrcarNo': '1',
+        'txtTotPsgCnt': '1',
+        'txtTrnClsfCd': '',         # train's classification code
+        'txtTrnGpCd': '',           # train's group code
+        'txtTrnNo': '',             # train's no
     }
     
     seat_info = {
-        'arrSrcarNo': [1, 2, 3, 5, 6, 7, 8],
-        'txtArvRsStnCd': '0020',
-        'txtArvStnRunOrdr': '000024',
-        'txtDptRsStnCd': '0001',
-        'txtDptStnRunOrdr': '000001',
+        'txtArvRsStnCd': '',        # arrival station code (NNNN: zero filed)
+                                    # used by train instance
+        'txtArvStnRunOrdr': '',     # used by train instance (NNNNNN:zero filed)
+        'txtDptRsStnCd': '',        # depart station code (NNNN: zero filed)
+        'txtDptStnRunOrdr': '',     # used by train instance (NNNNNN:zero filed)
+                                    # used by train instance
         'txtPsrmClCd': '1',
-        'txtRunDt': '20170919',
+        'txtRunDt': '',             # train departure date (YYYYmmdd)
         'txtSeatAttCd': '015',
-        'txtSrcarCnt': '7',
-        'txtSrcarNo': '1',
+        'txtSrcarNo': '',           # selected #. of 'arrSrcarNo'
         'txtTotPsgCnt': '1',
-        'txtTrnClsfCd': '02',
-        'txtTrnGpCd': '102',
-        'txtTrnNo': '01201',
+        'txtTrnClsfCd': '',         # used by train instance
+        'txtTrnGpCd': '',           # used by train instance
+        'txtTrnNo': '',             # used by train instance
     }
 
