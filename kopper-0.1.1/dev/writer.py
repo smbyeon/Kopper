@@ -7,4 +7,4 @@ class {}(enum.Enum):
     with open(file_name, "w") as f:
         f.write(header)
         for key, value in dict_info.items():
-            f.write("    {} = '{}',\n".format(key, value))
+            f.write("    {} = '{}'\n".format(key, value))
