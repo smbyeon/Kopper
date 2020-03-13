@@ -1,5 +1,6 @@
 import enum
 
+
 class DAYS(enum.Enum):
     월 = 0
     화 = 1

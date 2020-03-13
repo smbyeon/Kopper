@@ -1,5 +1,6 @@
 import enum
 
+
 class PARAMETERS(enum.Enum):
     train_info = {
         'checkStnNm': 'Y',
@@ -13,7 +14,7 @@ class PARAMETERS(enum.Enum):
         'selGoTrain': '',   # train type code
         'selGoYear': '',    # selected depart year
         'start': '',        # selected depart date (YYYY.m.d)
-        'txtGoAbrdDt': '', # selected depart date (YYYYmmdd)
+        'txtGoAbrdDt': '',  # selected depart date (YYYYmmdd)
         'txtGoEnd': '',     # arrival station name
         'txtGoHour': '',    # selected depart time (HHMMSS)
         'txtGoPage': '1',
@@ -32,8 +33,8 @@ class PARAMETERS(enum.Enum):
         'txtSeatAttCd_4': '015',
     }
 
+    # 'txtRunDt' and 'txtDptDt' can have the same value.
     route_info = {
-        # 'txtRunDt' and 'txtDptDt' can have the same value.
         'txtDptDt': '',     # YYYYmmdd
         'txtRunDt': '',     # YYYYmmdd 
         'txtTrnGpCd': '',   # train's group code

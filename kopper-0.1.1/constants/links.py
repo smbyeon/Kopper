@@ -1,5 +1,6 @@
 import enum
 
+
 class LINKS(enum.Enum):
     main = 'http://www.letskorail.com'
     train_info = 'http://www.letskorail.com/ebizprd/EbizPrdTicketPr21111_i1.do'

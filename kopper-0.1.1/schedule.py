@@ -1,40 +1,65 @@
 class Schedule(object):
+    """기차 운행 정보
 
-    def __init__(self, routes):
-        self._routes = []
+    Atrributes:
+        train_routes: 선택한 기차 통과 정거장
+    """
+    def __init__(self, train, stations):
+        self._train = train
+        self._stations = stations
 
-        if routes:
-            self._routes = routes
-        
         self._initialize()
 
     def _initialize(self):
-        sorted_routes = sorted(self._routes)
-        ordered_routes = []
+        sorted_stations = sorted(self._stations)
 
-        for idx, (route, route_next) in enumerate(zip(sorted_routes[:-1], sorted_routes[1:])):
-            route.depart_order = idx + 1
-            route.arrival_order = idx + 2
+        train_routes = []
 
-            route.next_station_code = route_next.station_code
-            route.next_station_name = route_next.station_name
+        for idx, (station, next_station) in enumerate(
+                zip(sorted_stations[:-1], sorted_stations[1:])):
+            station.depart_order = idx + 1
+            station.arrival_order = idx + 2
 
-            ordered_routes.append(route)
+            station.next_station = next_station
 
-        self._sorted_routes = ordered_routes
+            train_routes.append(station)
 
-    # TODO
-    def update_seats_info(self, route, seats_info):
-        for idx, old_route in enumerate(self._routes):
-            if old_route == route:
-                route.seats_info = seats_info
-                self._routes[idx] = route
-                print(old_route)
+        order_depart = 0
+        order_arrival = len(train_routes)
+
+        for order_idx, station in enumerate(train_routes):
+            if '{:04d}'.format(int(
+                    self._train.depart_station_code)) == station.station_code:
+                order_depart = order_idx
                 break
 
+        for order_idx, station in enumerate(train_routes):
+            if '{:04d}'.format(int(self._train.arrival_station_code)
+                               ) == station.next_station_code:
+                order_arrival = order_idx
+                break
+
+        self._sorted_routes = train_routes[order_depart:order_arrival + 1]
+
+    def print_routes(self, depart_station_idx, arrival_station_idx):
+        """train_routes의 정차역을 index를 통해 정보를 출력합니다.
+
+        Args:
+            deaprt_station_idx: 출발 정차역 index
+            arrival_station_idx: 도착 정차역 index
+        """
+        depart_station = self.train_routes[depart_station_idx]
+        arrival_station = self.train_routes[arrival_station_idx]
+
+        print('{} ({}) - {} ({})'.format(
+            depart_station.station_name,
+            depart_station.depart_time,
+            arrival_station.next_station.station_name,
+            arrival_station.next_station.arrival_time,
+        ))
 
     @property
-    def sorted_routes(self):
+    def train_routes(self):
         return self._sorted_routes
 
     def __str__(self):
@@ -44,10 +69,10 @@ class Schedule(object):
         # 대전 (15:02) - 동대구 (15:45)
         # 동대구 (15:47) - 부산 (16:27)
         msg = ''
-        for route_depart, route_arrival in zip(self.sorted_routes[:-1], self.sorted_routes[1:]):
+        for depart_route in self.train_routes:
             msg += '{} ({}) - {} ({}) \n'.format(
-                route_depart.station_name, route_depart.depart_time,
-                route_arrival.station_name, route_arrival.arrival_time,
-            )
+                depart_route.station_name, depart_route.depart_time,
+                depart_route.next_station.station_name,
+                depart_route.next_station.arrival_time)
 
         return msg.strip()
