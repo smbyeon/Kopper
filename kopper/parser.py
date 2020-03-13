@@ -6,9 +6,9 @@ from constants.parsing_map import PARSING_MAP
 
 def parsing_raw_trains_info(raw_html):
     """출발날짜, 출발시간, 출발역, 도착역, 기차유형 요청에 대한 응답 결과를 파싱.
-    
+
     Args:
-        raw_html (string): Crawler.trains_info에서 얻은 HTML source.
+        raw_html (str): Crawler.trains_info에서 얻은 HTML source.
 
     Returns:
         list: [{"key": "value", ...}, {...}, ...]
@@ -47,9 +47,9 @@ def parsing_raw_trains_info(raw_html):
 
 def parsing_raw_train_stations(raw_html):
     """선택한 기차가 통과하는 정거장 목록 요청에 대한 응답 결과를 파싱.
-    
+
     Args:
-        raw_html (string): Crawler.train_stations에서 얻은 HTML source.
+        raw_html (str): Crawler.train_stations에서 얻은 HTML source.
 
     Returns:
         list: [{"key": "value", ...}, {...}, ...]
@@ -94,9 +94,9 @@ def parsing_raw_train_stations(raw_html):
 
 def parsing_raw_srcar_length(raw_html):
     """선택한 기차가 이루고 있는 칸 번호 요청에 대한 응답 결과를 파싱.
-    
+
     Args:
-        raw_html (string): Crawler.train_srcar_length 얻은 HTML source.
+        raw_html (str): Crawler.train_srcar_length 얻은 HTML source.
 
     Returns:
         list: [1, 2, 3, ...]
@@ -119,12 +119,13 @@ def parsing_raw_srcar_length(raw_html):
 
 def parsing_raw_seat_by_srcar(raw_html):
     """선택한 기차의 특정 칸에 존재하는 좌석 상태 요청에 대한 응답 결과를 파싱.
-    
+
     Args:
-        raw_html (string): Crawler.train_seat_by_route 얻은 HTML source.
+        raw_html (str): Crawler.train_seat_by_route 얻은 HTML source.
 
     Returns:
-        dict: {'1A 좌석': 0, '1B 좌석': 1, ...}, 0: 빈자리, 1: 예약좌석
+        dict: | {'1A 좌석': 0, '1B 좌석': 1, ...} 
+        | 0: 빈자리, 1: 예약좌석
     """
 
     seat_status = {}
@@ -152,16 +153,16 @@ def parsing_raw_seat_by_srcar(raw_html):
 
 def parsing_raw_seats_by_schedule(raw_html_dict):
     """선택한 기차, 시간표, 칸 정보에서 좌석 상태를 일괄 요청한 뒤 응답 결과를 dict로 묶은 정보를 일괄 파싱.
-    
+
     Args:
         raw_html_dict (dict): Crawler.train_seats_by_schedule 얻은 HTML source.
 
     Returns:
-        dict: { '정거장 A': { '칸 번호 1': { '1A 좌석': 0, '1B 좌석': 1, ..., }, 
-                            '칸 번호 2': { ..., } },
-                '정거장 B': { ... },
-                ...
-                } 
+        dict: | { '정거장 A': { '칸 번호 1': { '1A 좌석': 0, '1B 좌석': 1, ..., }, 
+        | '칸 번호 2': { ..., } }, 
+        | '정거장 B': { ... }, 
+        | ... 
+        | }
     """
 
     seats_status = {}

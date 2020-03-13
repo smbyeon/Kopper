@@ -22,14 +22,14 @@ class Crawler(object):
         """출발일자, 출발시간, 출발역, 도착역, 기차 유형을 요청하고 HTML source 수집.
 
         Args:
-            depart_date (string): 출발일자(YYYYmmdd)
-            depart_time (string): 출발시간(HHMMSS)
+            depart_date (str): 출발일자(YYYYmmdd)
+            depart_time (str): 출발시간(HHMMSS)
             depart (STATIONS.value): 출발역
             arrival (STATIONS.value): 출발역
             train_type (TRAIN_TYPE.value): 기차 유형
 
         Returns:
-            string: HTML source
+            str: HTML source
         """
         _params = PARAMETERS.train_info.value
 
@@ -79,7 +79,7 @@ class Crawler(object):
             train (class 'train.Train'): 기차 인스턴스
 
         Returns:
-            string: HTML source
+            str: HTML source
         """
         return self._train_stations(train.run_date, train.depart_date,
                                     train.train_no, train.train_group_code)
@@ -89,13 +89,13 @@ class Crawler(object):
         """선택한 기차 시간표를 요청하고 HTML source 수집.
 
         Args:
-            run_date (string): 운행일자(YYYYmmdd)
-            depart_date (string): 출발일자(YYYYmmdd)
-            train_no (string): 기차 번호
-            train_no (string): 기차 그룹 코드
+            run_date (str): 운행일자(YYYYmmdd)
+            depart_date (str): 출발일자(YYYYmmdd)
+            train_no (str): 기차 번호
+            train_no (str): 기차 그룹 코드
 
         Returns:
-            string: HTML source
+            str: HTML source
         """
         _params = PARAMETERS.route_info.value
 
@@ -118,7 +118,7 @@ class Crawler(object):
             train (class 'train.Train'): 기차 인스턴스
 
         Returns:
-            string: HTML source
+            str: HTML source
         """
         _params = PARAMETERS.srcar_length_info.value
 
@@ -187,7 +187,7 @@ class Crawler(object):
         return seats_info
 
     def train_seat_by_route(self, train, station, srcar_no):
-        """선택한 기차 정보와 운행 시간표의 정차역 정보, 기차 칸 번호를 참고하여 정차역에서 다음 정차역까지 좌석 상태를 요청하고 HTML source 수집.
+        """| 선택한 기차 정보와 운행 시간표의 정차역 정보, 기차 칸 번호를 참고하여 정차역에서 다음 정차역까지 좌석 상태를 요청하고 HTML source 수집.
 
         Args:
             train (class 'train.Train'): 기차 인스턴스

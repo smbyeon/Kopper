@@ -9,7 +9,7 @@ def get_name_from_code(enum_cls, code):
         constants.enum_class.value (Enum.value): Enum이 상속된 클래스 value 값
 
     Returns:
-        string: constants.enum_class.key, value 값과 일치하는 key 값
+        str: constants.enum_class.key, value 값과 일치하는 key 값
 
     >>> from constants.days import DAYS
     >>> get_name_from_code(DAYS, 0)
@@ -40,15 +40,19 @@ def get_name_from_code(enum_cls, code):
 
 
 def get_stations(parsed_train_stations):
-    """선택한 기차가 통과하는 정거장에 대한 인스턴스 일괄 생성. 일괄 생성된 정거장 인스턴스들은 Schedule 클래스에서 Argument로 사용.
+    """선택한 기차가 통과하는 정거장에 대한 인스턴스 일괄 생성.
+    
+    일괄 생성된 정거장 인스턴스들은 Schedule 클래스에서 Argument로 사용.
     
     Args:
-        parsed_train_stations: helper.parsing_raw_train_stations에서 반환된 파싱 정보.
-        Crawler.train_stations에서 선택한 기차의 시간표 정보(HTML source)로 얻은 뒤,
-        helper.parsing_raw_train_stations에서 파싱된 정보를 인자로 사용합니다.
+        parsed_train_stations: helper.parsing_raw_train_stations에서 반환된 파싱 정보. 
 
     Returns:
         list: [<class 'station.Station'>, <class 'station.Station'>, ...]
+
+    Notes:
+        Crawler.train_stations에서 선택한 기차의 시간표 정보(HTML source)로 얻은 뒤, helper.parsing_raw_train_stations에서 파싱된 정보를 인자로 사용합니다.
+
     """
     return [
         Station(raw_station_info) for raw_station_info in parsed_train_stations

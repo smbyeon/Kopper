@@ -8,8 +8,8 @@ class Train(object):
     """기차 상세 정보: Schedule에 등록하여 Train 정보를 사용합니다.
 
     Attributes:
-        depart_date: 출발 일자
-        arrival_date: 도착일자
+        depart_date (str): 출발 일자
+        arrival_date (str): 도착일자
 
         depart_station_name: 출발역 이름
         arrival_station_name: 도착역 이름

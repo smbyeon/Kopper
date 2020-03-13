@@ -2,11 +2,13 @@ from algorithms import *
 from crawler import Crawler
 from helper import *
 from parser import *
-from train import Train
 from schedule import Schedule
+from train import Train
 
 
 class Kopper(object):
+    """Kopper 메인 클래스
+    """
     def __init__(self):
         self._crawler = Crawler()
 
@@ -15,8 +17,8 @@ class Kopper(object):
         """출발일자, 출발시간, 출발역, 도착역, 기차 유형을 요청한 결과 반환.
 
         Args:
-            depart_date (string): 출발일자(YYYYmmdd)
-            depart_time (string): 출발시간(HHMMSS)
+            depart_date (str): 출발일자(YYYYmmdd)
+            depart_time (str): 출발시간(HHMMSS)
             depart (STATIONS.value): 출발역
             arrival (STATIONS.value): 출발역
             train_type (TRAIN_TYPE.value): 기차 유형
@@ -68,12 +70,12 @@ class Kopper(object):
             schedule (class 'schedule.Schedule'): 기차 시간표 인스턴스
             srcar_length (list): 기차 칸 번호 리스트
 
-    Returns:
-        dict: { '정거장 A': { '칸 번호 1': { '1A 좌석': 0, '1B 좌석': 1, ..., }, 
-                            '칸 번호 2': { ..., } },
-                '정거장 B': { ... },
-                ...
-                } 
+        Returns:
+            dict: | { '정거장 A': { '칸 번호 1': { '1A 좌석': 0, '1B 좌석': 1, ..., }, 
+            | '칸 번호 2': { ..., } }, 
+            | '정거장 B': { ... }, 
+            | ... 
+            | }
         """
         raw_train_seats_info = self._crawler.train_seats_by_schedule(
             train, schedule, srcar_length)
