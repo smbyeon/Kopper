@@ -12,14 +12,15 @@
 
 import os
 import sys
-sys.path.insert(0, '../../')
+sys.path.insert(0, os.path.abspath('../kopper'))
+sys.path.insert(0, os.path.abspath('..'))
 
 
 # -- Project information -----------------------------------------------------
 
 project = 'kopper'
-copyright = '2020, Author'
-author = 'Author'
+copyright = '2020, Seongmok Byeon'
+author = 'Seongmok Byeon'
 
 
 # -- General configuration ---------------------------------------------------
@@ -29,9 +30,9 @@ author = 'Author'
 # ones.
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.viewcode',
     'sphinx.ext.todo',
     'sphinx.ext.napoleon',
+    'sphinx.ext.githubpages',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -42,7 +43,7 @@ templates_path = ['_templates']
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'ko'
+language = 'en'
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -55,7 +56,7 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'alabaster'
+html_theme = 'pyramid'
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -69,5 +70,5 @@ html_static_path = ['_static']
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
-autodoc_mock_imports = ['numpy', 'bs4', 'matplotlib', 'PIL']
+html_show_sourcelink = False
+pygments_style = 'sphinx'
