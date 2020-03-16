@@ -1,0 +1,21 @@
+Welcome to kopper's documentation!
+==================================
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Contents:
+
+   includeme
+
+.. toctree::
+   :maxdepth: 2
+   
+   kopper
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`

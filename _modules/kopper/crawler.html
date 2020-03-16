@@ -1,0 +1,335 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.crawler &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.crawler</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+<span class="kn">from</span> <span class="nn">requests</span> <span class="kn">import</span> <span class="n">Session</span>
+<span class="kn">import</span> <span class="nn">requests</span>
+
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">get_name_from_code</span>
+
+<span class="kn">from</span> <span class="nn">constants.days</span> <span class="kn">import</span> <span class="n">DAYS</span>
+<span class="kn">from</span> <span class="nn">constants.links</span> <span class="kn">import</span> <span class="n">LINKS</span>
+<span class="kn">from</span> <span class="nn">constants.parameters</span> <span class="kn">import</span> <span class="n">PARAMETERS</span>
+<span class="kn">from</span> <span class="nn">constants.stations</span> <span class="kn">import</span> <span class="n">STATIONS</span>
+<span class="kn">from</span> <span class="nn">constants.train_type</span> <span class="kn">import</span> <span class="n">TRAIN_TYPE</span>
+
+
+<div class="viewcode-block" id="Crawler"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler">[docs]</a><span class="k">class</span> <span class="nc">Crawler</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Korail 홈페이지에서 정보 수집 클래스</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_session</span> <span class="o">=</span> <span class="n">Session</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Crawler.trains_info"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler.trains_info">[docs]</a>    <span class="k">def</span> <span class="nf">trains_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depart_date</span><span class="p">,</span> <span class="n">depart_time</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">arrival</span><span class="p">,</span>
+                    <span class="n">train_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;출발일자, 출발시간, 출발역, 도착역, 기차 유형을 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            depart_date (str): 출발일자(YYYYmmdd)</span>
+<span class="sd">            depart_time (str): 출발시간(HHMMSS)</span>
+<span class="sd">            depart (STATIONS.value): 출발역</span>
+<span class="sd">            arrival (STATIONS.value): 출발역</span>
+<span class="sd">            train_type (TRAIN_TYPE.value): 기차 유형</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_params</span> <span class="o">=</span> <span class="n">PARAMETERS</span><span class="o">.</span><span class="n">train_info</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">depart_date</span><span class="p">,</span> <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">depart_time</span><span class="p">,</span> <span class="s2">&quot;%H%M%S&quot;</span><span class="p">)</span>
+
+        <span class="n">_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s2">&quot;selGoDay&quot;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_date</span><span class="o">.</span><span class="n">day</span><span class="p">),</span>  <span class="c1"># selected depart day</span>
+            <span class="s2">&quot;selGoHour&quot;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_time</span><span class="o">.</span><span class="n">hour</span><span class="p">),</span>  <span class="c1"># selected depart hour (HH)</span>
+            <span class="s2">&quot;selGoMonth&quot;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_date</span><span class="o">.</span><span class="n">month</span><span class="p">),</span>  <span class="c1"># selected depart month</span>
+            <span class="s2">&quot;selGoTrain&quot;</span><span class="p">:</span>
+            <span class="n">train_type</span><span class="o">.</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">train_type</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="ow">is</span> <span class="nb">tuple</span> <span class="k">else</span>
+            <span class="n">train_type</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>  <span class="c1"># train type code</span>
+            <span class="s2">&quot;selGoYear&quot;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">_date</span><span class="o">.</span><span class="n">year</span><span class="p">),</span>  <span class="c1"># selected depart year</span>
+            <span class="s2">&quot;start&quot;</span><span class="p">:</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">_date</span><span class="p">,</span> <span class="s2">&quot;%Y.%m.</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
+                <span class="s2">&quot;.0&quot;</span><span class="p">,</span> <span class="s2">&quot;.&quot;</span><span class="p">),</span>  <span class="c1"># selected depart date (yyyy.M.d)</span>
+            <span class="s2">&quot;txtGoAbrdDt&quot;</span><span class="p">:</span>
+            <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">_date</span><span class="p">,</span>
+                              <span class="s2">&quot;%Y%m</span><span class="si">%d</span><span class="s2">&quot;</span><span class="p">),</span>  <span class="c1"># selected depart date (yyyyMMdd)</span>
+            <span class="s2">&quot;txtGoEnd&quot;</span><span class="p">:</span>
+            <span class="n">get_name_from_code</span><span class="p">(</span><span class="n">STATIONS</span><span class="p">,</span>
+                               <span class="n">arrival</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>  <span class="c1"># arrival station name</span>
+            <span class="s2">&quot;txtGoHour&quot;</span><span class="p">:</span>
+            <span class="n">depart_time</span><span class="p">,</span>  <span class="c1"># selected depart time (HHmmss)</span>
+            <span class="s2">&quot;txtGoStart&quot;</span><span class="p">:</span>
+            <span class="n">get_name_from_code</span><span class="p">(</span><span class="n">STATIONS</span><span class="p">,</span>
+                               <span class="n">depart</span><span class="o">.</span><span class="n">value</span><span class="p">),</span>  <span class="c1"># department station name</span>
+            <span class="s2">&quot;txtGoYoil&quot;</span><span class="p">:</span>
+            <span class="n">get_name_from_code</span><span class="p">(</span>
+                <span class="n">DAYS</span><span class="p">,</span> <span class="n">_date</span><span class="o">.</span><span class="n">weekday</span><span class="p">()),</span>  <span class="c1"># selected a day code of the week.</span>
+        <span class="p">})</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">LINKS</span><span class="o">.</span><span class="n">train_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_params</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">html</span></div>
+
+<div class="viewcode-block" id="Crawler.train_stations"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler.train_stations">[docs]</a>    <span class="k">def</span> <span class="nf">train_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 시간표를 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_stations</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">run_date</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">depart_date</span><span class="p">,</span>
+                                    <span class="n">train</span><span class="o">.</span><span class="n">train_no</span><span class="p">,</span> <span class="n">train</span><span class="o">.</span><span class="n">train_group_code</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">_train_stations</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">run_date</span><span class="p">,</span> <span class="n">depart_date</span><span class="p">,</span> <span class="n">train_no</span><span class="p">,</span>
+                        <span class="n">train_group_code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 시간표를 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            run_date (str): 운행일자(YYYYmmdd)</span>
+<span class="sd">            depart_date (str): 출발일자(YYYYmmdd)</span>
+<span class="sd">            train_no (str): 기차 번호</span>
+<span class="sd">            train_no (str): 기차 그룹 코드</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_params</span> <span class="o">=</span> <span class="n">PARAMETERS</span><span class="o">.</span><span class="n">route_info</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;txtRunDt&#39;</span><span class="p">:</span> <span class="n">run_date</span><span class="p">,</span>  <span class="c1"># YYYYmmdd</span>
+            <span class="s1">&#39;txtDptDt&#39;</span><span class="p">:</span> <span class="n">depart_date</span><span class="p">,</span>  <span class="c1"># YYYYmmdd</span>
+            <span class="s1">&#39;txtTrnNo&#39;</span><span class="p">:</span> <span class="n">train_no</span><span class="p">,</span>
+            <span class="s1">&#39;txtTrnGpCd&#39;</span><span class="p">:</span> <span class="n">train_group_code</span><span class="p">,</span>
+        <span class="p">})</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LINKS</span><span class="o">.</span><span class="n">route_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">_params</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">html</span>
+
+<div class="viewcode-block" id="Crawler.train_srcar_length"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler.train_srcar_length">[docs]</a>    <span class="k">def</span> <span class="nf">train_srcar_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 칸 번호를 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_params</span> <span class="o">=</span> <span class="n">PARAMETERS</span><span class="o">.</span><span class="n">srcar_length_info</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;txtArvRsStnCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">arrival_station_code</span><span class="p">)</span>
+                            <span class="p">),</span>  <span class="c1"># arrival station code (NNNN: zero filed)</span>
+            <span class="s1">&#39;txtArvStnRunOrdr&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">raw_train_info</span><span class="p">[</span>
+                <span class="s1">&#39;h_arv_stn_run_ordr&#39;</span><span class="p">],</span>  <span class="c1"># used by train instance (NNNNNN:zero filed)</span>
+            <span class="s1">&#39;txtArvTm&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">arrival_time</span><span class="p">,</span>  <span class="c1"># arrival time (HHMMSS)</span>
+            <span class="s1">&#39;txtDptDt&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">depart_date</span><span class="p">,</span>  <span class="c1"># depart date (YYYYmmdd)</span>
+            <span class="s1">&#39;txtDptRsStnCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">train</span><span class="o">.</span><span class="n">depart_station_code</span><span class="p">)</span>
+                            <span class="p">),</span>  <span class="c1"># depart station code (NNNN: zero filed)</span>
+            <span class="s1">&#39;txtDptStnRunOrdr&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">raw_train_info</span><span class="p">[</span>
+                <span class="s1">&#39;h_dpt_stn_run_ordr&#39;</span><span class="p">],</span>  <span class="c1"># used by train instance (NNNNNN:zero filed)</span>
+            <span class="s1">&#39;txtDptTm&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">depart_time</span><span class="p">,</span>  <span class="c1"># depart time (HHMMSS)</span>
+            <span class="s1">&#39;txtPsrmClCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;txtRunDt&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">depart_date</span><span class="p">,</span>  <span class="c1"># depart date (YYYYmmdd)</span>
+            <span class="s1">&#39;txtSeatAttCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;015&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;txtSrcarNo&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;txtTotPsgCnt&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;1&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;txtTrnClsfCd&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_classification_code</span><span class="p">,</span>  <span class="c1"># train&#39;s classification code</span>
+            <span class="s1">&#39;txtTrnGpCd&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_group_code</span><span class="p">,</span>  <span class="c1"># train&#39;s group code</span>
+            <span class="s1">&#39;txtTrnNo&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_no</span><span class="p">,</span>  <span class="c1"># train&#39;s no</span>
+        <span class="p">})</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">LINKS</span><span class="o">.</span><span class="n">srcar_length_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">params</span><span class="o">=</span><span class="n">_params</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">html</span></div>
+
+<div class="viewcode-block" id="Crawler.train_seats_by_schedule"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler.train_seats_by_schedule">[docs]</a>    <span class="k">def</span> <span class="nf">train_seats_by_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">srcar_length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 정보와 운행 시간표를 참고하여 일괄적으로 좌석 상태를 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+<span class="sd">            schedule (class &#39;schedule.Schedule&#39;): 기차 시간표 인스턴스</span>
+<span class="sd">            srcar_length (list): 기차 칸 번호 리스트</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seats_info</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">schedule</span><span class="o">.</span><span class="n">train_routes</span><span class="p">:</span>
+            <span class="n">seats_info</span><span class="p">[</span><span class="n">route</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+            <span class="k">for</span> <span class="n">srcar_no</span> <span class="ow">in</span> <span class="n">srcar_length</span><span class="p">:</span>
+                <span class="n">_</span><span class="p">,</span> <span class="n">html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_seat_by_route</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">route</span><span class="p">,</span> <span class="n">srcar_no</span><span class="p">)</span>
+                <span class="n">seats_info</span><span class="p">[</span><span class="n">route</span><span class="p">][</span><span class="n">srcar_no</span><span class="p">]</span> <span class="o">=</span> <span class="n">html</span>
+
+        <span class="k">return</span> <span class="n">seats_info</span></div>
+
+<div class="viewcode-block" id="Crawler.train_seat_by_route"><a class="viewcode-back" href="../../kopper.crawler.html#kopper.crawler.Crawler.train_seat_by_route">[docs]</a>    <span class="k">def</span> <span class="nf">train_seat_by_route</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">station</span><span class="p">,</span> <span class="n">srcar_no</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;| 선택한 기차 정보와 운행 시간표의 정차역 정보, 기차 칸 번호를 참고하여 정차역에서 다음 정차역까지 좌석 상태를 요청하고 HTML source 수집.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+<span class="sd">            schedule (class &#39;station.Station&#39;): 정차역 인스턴스</span>
+<span class="sd">            srcar_no: 기차 칸 번호</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: HTML source</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">_params</span> <span class="o">=</span> <span class="n">PARAMETERS</span><span class="o">.</span><span class="n">seat_info</span><span class="o">.</span><span class="n">value</span>
+
+        <span class="n">_params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span>
+            <span class="s1">&#39;txtArvRsStnCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">next_station</span><span class="o">.</span><span class="n">station_code</span><span class="p">)</span>
+                            <span class="p">),</span>  <span class="c1"># arrival station code (NNNN: zero filed)</span>
+            <span class="s1">&#39;txtArvStnRunOrdr&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:06d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">arrival_order</span>
+                            <span class="p">),</span>  <span class="c1"># used by train instance (NNNNNN:zero filed)</span>
+            <span class="s1">&#39;txtDptRsStnCd&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">station_code</span><span class="p">)</span>
+                            <span class="p">),</span>  <span class="c1"># depart station code (NNNN: zero filed)</span>
+            <span class="s1">&#39;txtDptStnRunOrdr&#39;</span><span class="p">:</span>
+            <span class="s1">&#39;</span><span class="si">{:06d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">station</span><span class="o">.</span><span class="n">depart_order</span>
+                            <span class="p">),</span>  <span class="c1"># used by train instance (NNNNNN:zero filed)</span>
+            <span class="s1">&#39;txtRunDt&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">depart_date</span><span class="p">,</span>  <span class="c1"># depart date (YYYYmmdd)</span>
+            <span class="s1">&#39;txtSrcarNo&#39;</span><span class="p">:</span>
+            <span class="n">srcar_no</span><span class="p">,</span>  <span class="c1"># selected #. of &#39;arrSrcarNo&#39;</span>
+            <span class="s1">&#39;txtTrnClsfCd&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_classification_code</span><span class="p">,</span>  <span class="c1"># train&#39;s classification code</span>
+            <span class="s1">&#39;txtTrnGpCd&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_group_code</span><span class="p">,</span>  <span class="c1"># train&#39;s group code</span>
+            <span class="s1">&#39;txtTrnNo&#39;</span><span class="p">:</span>
+            <span class="n">train</span><span class="o">.</span><span class="n">train_no</span><span class="p">,</span>  <span class="c1"># train&#39;s no</span>
+        <span class="p">})</span>
+
+        <span class="n">response</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_session</span><span class="o">.</span><span class="n">post</span><span class="p">(</span><span class="n">LINKS</span><span class="o">.</span><span class="n">seat_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">_params</span><span class="p">)</span>
+        <span class="n">html</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">text</span>
+
+        <span class="k">return</span> <span class="n">response</span><span class="o">.</span><span class="n">status_code</span><span class="p">,</span> <span class="n">html</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

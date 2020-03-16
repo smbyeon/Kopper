@@ -1,0 +1,6 @@
+kopper.train
+===================
+
+.. automodule:: kopper.train
+   :members:
+   :show-inheritance:

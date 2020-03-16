@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Usage &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Submodules" href="kopper.html" />
+    <link rel="prev" title="Welcome to kopper’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="usage">
+<h1>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="http://www.letskorail.com/">Korail</a> 에서 기차 예매를 진행할 때, 출발역에서 도착역까지 예매를 할 수 없는 경우
+중간 정차역을 껴서 예매가 가능한 구간이 있는 지 확인하는 코드입니다.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 22%" />
+<col style="width: 19%" />
+<col style="width: 22%" />
+<col style="width: 22%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(Seat_{n-1}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(Seat_{n}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(Seat_{n+1}\)</span></p></th>
+<th class="head"><p><span class="math notranslate nohighlight">\(Seat_{n+k}\)</span></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>서울-천안</p></td>
+<td><p>X</p></td>
+<td><p>O</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+</tr>
+<tr class="row-odd"><td><p>천안-부산</p></td>
+<td><p>X</p></td>
+<td><p>X</p></td>
+<td><p>O</p></td>
+<td><p>X</p></td>
+</tr>
+</tbody>
+</table>
+<p>서울에서 부산까지 완전히 비어있는 좌석이 없으므로 예약할 수 없지만, (서울 - 천안),
+(천안 - 부산) 구간에서 티켓을 구매할 수 있습니다.</p>
+<hr class="docutils" />
+<div class="section" id="id1">
+<h2>1. 기차 정보 조회<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">constants.stations</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">constants.train_type</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">kopper</span> <span class="kn">import</span> <span class="n">Kopper</span>
+
+<span class="n">kopper</span> <span class="o">=</span> <span class="n">Kopper</span><span class="p">()</span>
+
+<span class="c1"># 기차 기본 정보 (최대 10개 조회)</span>
+<span class="n">trains_info</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">trains_info</span><span class="p">(</span><span class="s2">&quot;20200315&quot;</span><span class="p">,</span> <span class="s2">&quot;60000&quot;</span><span class="p">,</span> <span class="n">STATIONS</span><span class="o">.</span><span class="n">광명</span><span class="p">,</span> <span class="n">STATIONS</span><span class="o">.</span><span class="n">부산</span><span class="p">,</span> <span class="n">TRAIN_TYPE</span><span class="o">.</span><span class="n">KTX</span><span class="p">)</span>
+
+
+<span class="k">for</span> <span class="n">train_info</span> <span class="ow">in</span> <span class="n">trains_info</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">train_info</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">No.00101     KTX     광명(053100) ------ 부산(075100)</span>
+<span class="sd">No.00103     KTX     광명(054600) ------ 부산(081700)</span>
+<span class="sd">No.00105     KTX     광명(061600) ------ 부산(083700)</span>
+<span class="sd">No.00201     KTX_산천      광명(062100) ------ 부산(085400)</span>
+<span class="sd">No.00107     KTX     광명(065100) ------ 부산(091600)</span>
+<span class="sd">No.00109     KTX     광명(071600) ------ 부산(094000)</span>
+<span class="sd">No.00111     KTX     광명(074600) ------ 부산(100200)</span>
+<span class="sd">No.00113     KTX     광명(080900) ------ 부산(100700)</span>
+<span class="sd">No.00115     KTX     광명(081700) ------ 부산(104300)</span>
+<span class="sd">No.00119     KTX_산천      광명(095100) ------ 부산(122400)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>2. 기차 시간표 조회<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 기차 선택</span>
+<span class="n">selected_train_info</span> <span class="o">=</span> <span class="n">trains_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># 선택한 기차 시간표 조회</span>
+<span class="n">selected_train_schedule</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_schedule</span><span class="p">(</span><span class="n">selected_train_info</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">selected_train_schedule</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">광명 (05:31) - 대전 (06:10)</span>
+<span class="sd">대전 (06:12) - 동대구 (06:56)</span>
+<span class="sd">동대구 (06:58) - 신경주 (07:15)</span>
+<span class="sd">신경주 (07:16) - 울산_통도사 (07:27)</span>
+<span class="sd">울산_통도사 (07:29) - 부산 (07:51)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>3. 선택한 기차 칸 번호 조회<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selected_train_srcar_length</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_srcar_length</span><span class="p">(</span><span class="n">selected_train</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">selected_train_srcar_length</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">[&#39;1&#39;, &#39;5&#39;, &#39;6&#39;, &#39;7&#39;, &#39;8&#39;, &#39;9&#39;, &#39;10&#39;, &#39;11&#39;, &#39;12&#39;, &#39;13&#39;, &#39;15&#39;, &#39;17&#39;, &#39;18&#39;]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="id4">
+<h2>4. 예매할 수 있는 구간 출력<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 보통 약 10 ~ 20초 정도 크롤링 시간 소요</span>
+<span class="n">dict_selected_train_seats</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_seats_by_schedule</span><span class="p">(</span><span class="n">selected_train</span><span class="p">,</span> <span class="n">selected_train_schedule</span><span class="p">,</span> <span class="n">selected_train_srcar_length</span><span class="p">)</span>
+
+<span class="n">kopper</span><span class="o">.</span><span class="n">report_routes</span><span class="p">(</span><span class="n">selected_train_schedule</span><span class="p">,</span> <span class="n">dict_selected_train_seats</span><span class="p">)</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">광명 (05:31) - 부산 (07:51)</span>
+<span class="sd">&quot;&quot;&quot;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to kopper’s documentation!</a></li>
+      <li>Next: <a href="kopper.html" title="next chapter">Submodules</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/includeme.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

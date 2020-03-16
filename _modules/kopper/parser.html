@@ -1,0 +1,282 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.parser &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.parser</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">bs4</span> <span class="kn">import</span> <span class="n">BeautifulSoup</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+<span class="kn">from</span> <span class="nn">constants.parsing_map</span> <span class="kn">import</span> <span class="n">PARSING_MAP</span>
+
+
+<div class="viewcode-block" id="parsing_raw_trains_info"><a class="viewcode-back" href="../../kopper.parser.html#kopper.parser.parsing_raw_trains_info">[docs]</a><span class="k">def</span> <span class="nf">parsing_raw_trains_info</span><span class="p">(</span><span class="n">raw_html</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;출발날짜, 출발시간, 출발역, 도착역, 기차유형 요청에 대한 응답 결과를 파싱.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_html (str): Crawler.trains_info에서 얻은 HTML source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: [{&quot;key&quot;: &quot;value&quot;, ...}, {...}, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">rgx_pattern</span> <span class="o">=</span> <span class="sa">r</span><span class="s1">&#39;train_info\((.*)\)&#39;</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">raw_html</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+    <span class="n">js_soup_tags</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;script&quot;</span><span class="p">,</span> <span class="p">{</span>
+        <span class="s2">&quot;type&quot;</span><span class="p">:</span> <span class="s2">&quot;text/javascript&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;language&quot;</span><span class="p">:</span> <span class="s2">&quot;javascripts&quot;</span>
+    <span class="p">})</span>
+
+    <span class="n">trains</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">js_soup</span> <span class="ow">in</span> <span class="n">js_soup_tags</span><span class="p">:</span>
+        <span class="n">js_text</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">js_soup</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+        <span class="n">raw_train_info</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">search</span><span class="p">(</span><span class="n">rgx_pattern</span><span class="p">,</span>
+                                   <span class="n">js_text</span><span class="p">)</span><span class="o">.</span><span class="n">group</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;&quot;&#39;</span><span class="p">,</span>
+                                                             <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+
+        <span class="k">assert</span> <span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">PARSING_MAP</span><span class="o">.</span><span class="n">train_info</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">raw_train_info</span><span class="p">))</span>
+
+        <span class="n">train_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">PARSING_MAP</span><span class="o">.</span><span class="n">train_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="n">raw_train_info</span><span class="p">))</span>
+        <span class="n">trains</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">train_info</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">trains</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Trains information is not responsed.</span>
+<span class="s2">            Probably the parmaters of Crawler.trains_info&#39;s passed are not valid.</span>
+<span class="s2">            Please execute Crawler.trains_info function, again.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">trains</span></div>
+
+
+<div class="viewcode-block" id="parsing_raw_train_stations"><a class="viewcode-back" href="../../kopper.parser.html#kopper.parser.parsing_raw_train_stations">[docs]</a><span class="k">def</span> <span class="nf">parsing_raw_train_stations</span><span class="p">(</span><span class="n">raw_html</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;선택한 기차가 통과하는 정거장 목록 요청에 대한 응답 결과를 파싱.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_html (str): Crawler.train_stations에서 얻은 HTML source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: [{&quot;key&quot;: &quot;value&quot;, ...}, {...}, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">raw_html</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+    <span class="n">tbody_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;tbody&quot;</span><span class="p">)</span>
+    <span class="n">tr_tags</span> <span class="o">=</span> <span class="n">tbody_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;tr&quot;</span><span class="p">)</span>
+
+    <span class="n">stations</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">tr_tag</span> <span class="ow">in</span> <span class="n">tr_tags</span><span class="p">:</span>
+        <span class="n">td_tags</span> <span class="o">=</span> <span class="n">tr_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;td&quot;</span><span class="p">)</span>
+
+        <span class="n">station_name</span> <span class="o">=</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">arrival_time</span> <span class="o">=</span> <span class="s1">&#39;00:00&#39;</span> <span class="k">if</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span>
+        <span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">depart_time</span> <span class="o">=</span> <span class="s1">&#39;00:00&#39;</span> <span class="k">if</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span>
+        <span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">delay_minutes</span> <span class="o">=</span> <span class="s1">&#39;0&#39;</span> <span class="k">if</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span>
+        <span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;-&#39;</span> <span class="k">else</span> <span class="n">td_tags</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+
+        <span class="n">raw_route_info</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">station_name</span><span class="p">,</span>
+            <span class="n">arrival_time</span><span class="p">,</span>
+            <span class="n">depart_time</span><span class="p">,</span>
+            <span class="n">delay_minutes</span><span class="p">,</span>
+        <span class="p">]</span>
+
+        <span class="n">station_info</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">PARSING_MAP</span><span class="o">.</span><span class="n">station_info</span><span class="o">.</span><span class="n">value</span><span class="p">,</span>
+                                <span class="n">raw_route_info</span><span class="p">))</span>
+        <span class="n">stations</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">station_info</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">stations</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Stations information is not responsed.</span>
+<span class="s2">            Probably the parmaters of Crawler.train_stations&#39;s passed are not valid.</span>
+<span class="s2">            Please execute Crawler.trains_info function and pass train_info instance to Crawler.train_stations, again.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">stations</span></div>
+
+
+<div class="viewcode-block" id="parsing_raw_srcar_length"><a class="viewcode-back" href="../../kopper.parser.html#kopper.parser.parsing_raw_srcar_length">[docs]</a><span class="k">def</span> <span class="nf">parsing_raw_srcar_length</span><span class="p">(</span><span class="n">raw_html</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;선택한 기차가 이루고 있는 칸 번호 요청에 대한 응답 결과를 파싱.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_html (str): Crawler.train_srcar_length 얻은 HTML source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: [1, 2, 3, ...]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">raw_html</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+    <span class="n">input_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;hidden&#39;</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;arrSrcarNo&#39;</span><span class="p">})</span>
+
+    <span class="n">srcars</span> <span class="o">=</span> <span class="n">input_tag</span><span class="p">[</span><span class="s1">&#39;value&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">srcars</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Srcar-Length information is not responsed.</span>
+<span class="s2">            Probably train_info is not valid.</span>
+<span class="s2">            Please execute Crawler.trains_info function and pass train_info instance to Crawler.train_srcar_length, again.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">srcars</span></div>
+
+
+<div class="viewcode-block" id="parsing_raw_seat_by_srcar"><a class="viewcode-back" href="../../kopper.parser.html#kopper.parser.parsing_raw_seat_by_srcar">[docs]</a><span class="k">def</span> <span class="nf">parsing_raw_seat_by_srcar</span><span class="p">(</span><span class="n">raw_html</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;선택한 기차의 특정 칸에 존재하는 좌석 상태 요청에 대한 응답 결과를 파싱.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_html (str): Crawler.train_seat_by_route 얻은 HTML source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: | {&#39;1A 좌석&#39;: 0, &#39;1B 좌석&#39;: 1, ...} </span>
+<span class="sd">        | 0: 빈자리, 1: 예약좌석</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">seat_status</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">soup</span> <span class="o">=</span> <span class="n">BeautifulSoup</span><span class="p">(</span><span class="n">raw_html</span><span class="p">,</span> <span class="s2">&quot;html.parser&quot;</span><span class="p">)</span>
+
+    <span class="n">div_tag</span> <span class="o">=</span> <span class="n">soup</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;div&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s1">&#39;id&#39;</span><span class="p">:</span> <span class="s1">&#39;seat_box_id&#39;</span><span class="p">})</span>
+
+    <span class="n">span_tags_on</span> <span class="o">=</span> <span class="n">div_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ck_seat_td1_on&quot;</span><span class="p">})</span>
+    <span class="n">span_tags_on</span> <span class="o">+=</span> <span class="n">div_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ck_seat_td2_on&quot;</span><span class="p">})</span>
+
+    <span class="n">span_tags_off</span> <span class="o">=</span> <span class="n">div_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ck_seat_td1_off&quot;</span><span class="p">})</span>
+    <span class="n">span_tags_off</span> <span class="o">+=</span> <span class="n">div_tag</span><span class="o">.</span><span class="n">find_all</span><span class="p">(</span><span class="s2">&quot;span&quot;</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;class&quot;</span><span class="p">:</span> <span class="s2">&quot;ck_seat_td2_off&quot;</span><span class="p">})</span>
+
+    <span class="k">for</span> <span class="n">span_tag</span> <span class="ow">in</span> <span class="n">span_tags_on</span><span class="p">:</span>
+        <span class="n">seat_no</span> <span class="o">=</span> <span class="n">span_tag</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">seat_status</span><span class="p">[</span><span class="n">seat_no</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1"># empty seat</span>
+
+    <span class="k">for</span> <span class="n">span_tag</span> <span class="ow">in</span> <span class="n">span_tags_off</span><span class="p">:</span>
+        <span class="n">seat_no</span> <span class="o">=</span> <span class="n">span_tag</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        <span class="n">seat_status</span><span class="p">[</span><span class="n">seat_no</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># full seat</span>
+
+    <span class="k">return</span> <span class="n">seat_status</span></div>
+
+
+<div class="viewcode-block" id="parsing_raw_seats_by_schedule"><a class="viewcode-back" href="../../kopper.parser.html#kopper.parser.parsing_raw_seats_by_schedule">[docs]</a><span class="k">def</span> <span class="nf">parsing_raw_seats_by_schedule</span><span class="p">(</span><span class="n">raw_html_dict</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;선택한 기차, 시간표, 칸 정보에서 좌석 상태를 일괄 요청한 뒤 응답 결과를 dict로 묶은 정보를 일괄 파싱.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        raw_html_dict (dict): Crawler.train_seats_by_schedule 얻은 HTML source.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        dict: | { &#39;정거장 A&#39;: { &#39;칸 번호 1&#39;: { &#39;1A 좌석&#39;: 0, &#39;1B 좌석&#39;: 1, ..., }, </span>
+<span class="sd">        | &#39;칸 번호 2&#39;: { ..., } }, </span>
+<span class="sd">        | &#39;정거장 B&#39;: { ... }, </span>
+<span class="sd">        | ... </span>
+<span class="sd">        | }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">seats_status</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">station</span><span class="p">,</span> <span class="n">seats_info</span> <span class="ow">in</span> <span class="n">raw_html_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">seats_status</span><span class="p">[</span><span class="n">station</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">srcar_no</span><span class="p">,</span> <span class="n">seat_info</span> <span class="ow">in</span> <span class="n">seats_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">seats_status</span><span class="p">[</span><span class="n">station</span><span class="p">][</span><span class="n">srcar_no</span><span class="p">]</span> <span class="o">=</span> <span class="n">parsing_raw_seat_by_srcar</span><span class="p">(</span>
+                <span class="n">seat_info</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">seats_status</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

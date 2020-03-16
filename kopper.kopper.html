@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.kopper &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="kopper.parser" href="kopper.parser.html" />
+    <link rel="prev" title="kopper.helper" href="kopper.helper.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kopper.kopper">
+<span id="kopper-kopper"></span><h1>kopper.kopper<a class="headerlink" href="#module-kopper.kopper" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="kopper.kopper.Kopper">
+<em class="property">class </em><code class="sig-prename descclassname">kopper.kopper.</code><code class="sig-name descname">Kopper</code><a class="reference internal" href="_modules/kopper/kopper.html#Kopper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Kopper 메인 클래스</p>
+<dl class="method">
+<dt id="kopper.kopper.Kopper.report_routes">
+<code class="sig-name descname">report_routes</code><span class="sig-paren">(</span><em class="sig-param">schedule</em>, <em class="sig-param">parsed_seats_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/kopper.html#Kopper.report_routes"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper.report_routes" title="Permalink to this definition">¶</a></dt>
+<dd><p>train_routes의 정차역을 index를 통해 정보를 출력합니다.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>deaprt_station_idx: 출발 정차역 index
+arrival_station_idx: 도착 정차역 index</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kopper.kopper.Kopper.train_schedule">
+<code class="sig-name descname">train_schedule</code><span class="sig-paren">(</span><em class="sig-param">train</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/kopper.html#Kopper.train_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper.train_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차 시간표를 요청한 결과 반환.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>train (class ‘train.Train’): 기차 인스턴스</p>
+</dd>
+<dt>Returns:</dt><dd><p>&lt;class ‘schedule.Schedule’&gt;</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kopper.kopper.Kopper.train_seats_by_schedule">
+<code class="sig-name descname">train_seats_by_schedule</code><span class="sig-paren">(</span><em class="sig-param">train</em>, <em class="sig-param">schedule</em>, <em class="sig-param">srcar_length</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/kopper.html#Kopper.train_seats_by_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper.train_seats_by_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차 정보와 운행 시간표를 참고하여 일괄적으로 좌석 상태를 요청하고 결과 반환.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>train (class ‘train.Train’): 기차 인스턴스
+schedule (class ‘schedule.Schedule’): 기차 시간표 인스턴스
+srcar_length (list): 기차 칸 번호 리스트</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: | { ‘정거장 A’: { ‘칸 번호 1’: { ‘1A 좌석’: 0, ‘1B 좌석’: 1, …, }, 
+| ‘칸 번호 2’: { …, } }, 
+| ‘정거장 B’: { … }, 
+| … 
+| }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kopper.kopper.Kopper.train_srcar_length">
+<code class="sig-name descname">train_srcar_length</code><span class="sig-paren">(</span><em class="sig-param">train</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/kopper.html#Kopper.train_srcar_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper.train_srcar_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차 칸 번호를 요청한 결과 반환.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>train (class ‘train.Train’): 기차 인스턴스</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: 기차 칸 번호 리스트</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="kopper.kopper.Kopper.trains_info">
+<code class="sig-name descname">trains_info</code><span class="sig-paren">(</span><em class="sig-param">depart_date</em>, <em class="sig-param">depart_time</em>, <em class="sig-param">depart</em>, <em class="sig-param">arrival</em>, <em class="sig-param">train_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/kopper.html#Kopper.trains_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.kopper.Kopper.trains_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>출발일자, 출발시간, 출발역, 도착역, 기차 유형을 요청한 결과 반환.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>depart_date (str): 출발일자(YYYYmmdd)
+depart_time (str): 출발시간(HHMMSS)
+depart (STATIONS.value): 출발역
+arrival (STATIONS.value): 출발역
+train_type (TRAIN_TYPE.value): 기차 유형</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: [&lt;class ‘train.Train’&gt;, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html">Usage</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kopper.html">Submodules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kopper.algorithms.html">kopper.algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.crawler.html">kopper.crawler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.helper.html">kopper.helper</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kopper.kopper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.parser.html">kopper.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.schedule.html">kopper.schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.station.html">kopper.station</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.train.html">kopper.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.html#module-kopper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="kopper.html">Submodules</a><ul>
+      <li>Previous: <a href="kopper.helper.html" title="previous chapter">kopper.helper</a></li>
+      <li>Next: <a href="kopper.parser.html" title="next chapter">kopper.parser</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/kopper.kopper.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

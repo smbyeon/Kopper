@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.algorithms &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.algorithms</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="nn">re</span>
+
+
+<span class="k">def</span> <span class="nf">atoi</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">text</span><span class="p">)</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">isdigit</span><span class="p">()</span> <span class="k">else</span> <span class="n">text</span>
+
+
+<div class="viewcode-block" id="natural_keys"><a class="viewcode-back" href="../../kopper.algorithms.html#kopper.algorithms.natural_keys">[docs]</a><span class="k">def</span> <span class="nf">natural_keys</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Reference: https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside</span>
+<span class="sd">    alist.sort(key=natural_keys) sorts in human order</span>
+<span class="sd">    http://nedbatchelder.com/blog/200712/human_sorting.html</span>
+<span class="sd">    (See Toothy&#39;s implementation in the comments)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">return</span> <span class="p">[</span><span class="n">atoi</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;(\d+)&#39;</span><span class="p">,</span> <span class="n">text</span><span class="p">)]</span></div>
+
+
+<div class="viewcode-block" id="make_graph"><a class="viewcode-back" href="../../kopper.algorithms.html#kopper.algorithms.make_graph">[docs]</a><span class="k">def</span> <span class="nf">make_graph</span><span class="p">(</span><span class="n">parsed_seats_info</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;파싱한 seats_info에서 예약 가능한 좌석 구간을 확인하기 위해 그래프 생성.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        parsed_seats_info (dict): helper.parsing_raw_seats_info_by_schedule에서 반환된 파싱 정보.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: 2D-list graph</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        | Crawler.train_seats_by_schedule에서 행선지 위의 모든 좌석 정보(HTML source)를 얻은 뒤,  </span>
+<span class="sd">        | helper.parsing_raw_seats_info_by_schedule에서 파싱된 정보를 인자로 사용합니다.</span>
+
+<span class="sd">    ..</span>
+
+<span class="sd">    +-----------+-------------------+-------------------+-------------------+-------------------+</span>
+<span class="sd">    |           |      srcar. 1     |      srcar. 2     |      srcar. 3     |      srcar. 4     |</span>
+<span class="sd">    +-----------+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+</span>
+<span class="sd">    | route. 1  | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D |</span>
+<span class="sd">    +-----------+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+</span>
+<span class="sd">    | route. 2  | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D |</span>
+<span class="sd">    +-----------+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+</span>
+<span class="sd">    | route. 3  | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D |</span>
+<span class="sd">    +-----------+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+</span>
+<span class="sd">    | route. 4  | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D | 1A | 1B | 1C | 1D |</span>
+<span class="sd">    +-----------+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+----+</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">graph</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">seats_info</span> <span class="ow">in</span> <span class="n">parsed_seats_info</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">srcar_nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seats_info</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">srcar_nums</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">natural_keys</span><span class="p">)</span>
+
+        <span class="n">row</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">srcar_no</span> <span class="ow">in</span> <span class="n">srcar_nums</span><span class="p">:</span>
+            <span class="n">seats_nums</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">seats_info</span><span class="p">[</span><span class="n">srcar_no</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            <span class="n">seats_nums</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">key</span><span class="o">=</span><span class="n">natural_keys</span><span class="p">)</span>
+
+            <span class="k">for</span> <span class="n">seat_no</span> <span class="ow">in</span> <span class="n">seats_nums</span><span class="p">:</span>
+                <span class="n">row</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">seats_info</span><span class="p">[</span><span class="n">srcar_no</span><span class="p">][</span><span class="n">seat_no</span><span class="p">])</span>
+
+        <span class="n">graph</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">row</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">graph</span></div>
+
+
+<div class="viewcode-block" id="get_routes_idx"><a class="viewcode-back" href="../../kopper.algorithms.html#kopper.algorithms.get_routes_idx">[docs]</a><span class="k">def</span> <span class="nf">get_routes_idx</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">step</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; | 예약 가능한 좌석 구간의 (출발지, 도착지) index 값 반환.  </span>
+<span class="sd">    | Schedule 클래스에서 구간 정보를 출력할 때 사용하는 index 값.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        graph: make_graph에서 생성한 그래프</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: | [ (출발지1, 도착지1), (출발지2, 도착지2), ...]  </span>
+<span class="sd">        | 도착지1과 출발지2는 같은 정거장.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">INF</span> <span class="o">=</span> <span class="mi">987654321</span>
+
+    <span class="n">q</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+
+    <span class="n">row_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+    <span class="n">col_size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">graph</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">col_size</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="n">INF</span><span class="p">,</span> <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span>
+        <span class="k">if</span> <span class="n">graph</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">({</span><span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">INF</span><span class="p">,</span> <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="n">row_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span>
+
+    <span class="n">searched_routes</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">q</span><span class="o">.</span><span class="n">empty</span><span class="p">():</span>
+        <span class="n">here</span> <span class="o">=</span> <span class="n">q</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="nb">next</span> <span class="o">=</span> <span class="p">({</span>
+                <span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+            <span class="p">})</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">next</span> <span class="o">=</span> <span class="p">({</span>
+                <span class="s1">&#39;cost&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">],</span>
+                <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+            <span class="p">})</span>
+
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]</span> <span class="o">&lt;</span> <span class="n">row_size</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">graph</span><span class="p">[</span><span class="nb">next</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]][</span><span class="nb">next</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">graph</span><span class="p">[</span><span class="nb">next</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]][</span><span class="nb">next</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;cost&#39;</span><span class="p">]</span>
+                <span class="n">q</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="nb">next</span><span class="p">)</span>
+
+            <span class="k">elif</span> <span class="n">graph</span><span class="p">[</span><span class="n">here</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]][</span><span class="n">here</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]]</span> <span class="o">*</span> <span class="n">graph</span><span class="p">[</span>
+                    <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]][</span><span class="nb">next</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]]</span> <span class="o">&lt;</span> <span class="o">-</span><span class="n">INF</span><span class="p">:</span>
+                <span class="n">searched_routes</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;route1&#39;</span><span class="p">:</span> <span class="p">({</span>
+                        <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                        <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+                    <span class="p">},</span> <span class="p">{</span>
+                        <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="n">here</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+                    <span class="p">}),</span>
+                    <span class="s1">&#39;route2&#39;</span><span class="p">:</span> <span class="p">({</span>
+                        <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;station_idx&#39;</span><span class="p">],</span>
+                        <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+                    <span class="p">},</span> <span class="p">{</span>
+                        <span class="s1">&#39;station_idx&#39;</span><span class="p">:</span> <span class="n">row_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">,</span>
+                        <span class="s1">&#39;seat_idx&#39;</span><span class="p">:</span> <span class="nb">next</span><span class="p">[</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span>
+                    <span class="p">})</span>
+                <span class="p">}</span>
+                <span class="k">break</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">searched_routes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">searched_routes</span>
+
+    <span class="k">if</span> <span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route1&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route2&#39;</span><span class="p">][</span>
+            <span class="mi">0</span><span class="p">][</span><span class="s1">&#39;seat_idx&#39;</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">],</span>
+                 <span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route2&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">])]</span>
+
+    <span class="k">return</span> <span class="p">[(</span><span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route1&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">],</span>
+             <span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route1&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">]),</span>
+            <span class="p">(</span><span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route2&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">],</span>
+             <span class="n">searched_routes</span><span class="p">[</span><span class="s1">&#39;route2&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">][</span><span class="s1">&#39;station_idx&#39;</span><span class="p">])]</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,190 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.parser &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="kopper.schedule" href="kopper.schedule.html" />
+    <link rel="prev" title="kopper.kopper" href="kopper.kopper.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kopper.parser">
+<span id="kopper-parser"></span><h1>kopper.parser<a class="headerlink" href="#module-kopper.parser" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="kopper.parser.parsing_raw_seat_by_srcar">
+<code class="sig-prename descclassname">kopper.parser.</code><code class="sig-name descname">parsing_raw_seat_by_srcar</code><span class="sig-paren">(</span><em class="sig-param">raw_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/parser.html#parsing_raw_seat_by_srcar"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.parser.parsing_raw_seat_by_srcar" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차의 특정 칸에 존재하는 좌석 상태 요청에 대한 응답 결과를 파싱.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>raw_html (str): Crawler.train_seat_by_route 얻은 HTML source.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: | {‘1A 좌석’: 0, ‘1B 좌석’: 1, …} 
+| 0: 빈자리, 1: 예약좌석</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.parser.parsing_raw_seats_by_schedule">
+<code class="sig-prename descclassname">kopper.parser.</code><code class="sig-name descname">parsing_raw_seats_by_schedule</code><span class="sig-paren">(</span><em class="sig-param">raw_html_dict</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/parser.html#parsing_raw_seats_by_schedule"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.parser.parsing_raw_seats_by_schedule" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차, 시간표, 칸 정보에서 좌석 상태를 일괄 요청한 뒤 응답 결과를 dict로 묶은 정보를 일괄 파싱.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>raw_html_dict (dict): Crawler.train_seats_by_schedule 얻은 HTML source.</p>
+</dd>
+<dt>Returns:</dt><dd><p>dict: | { ‘정거장 A’: { ‘칸 번호 1’: { ‘1A 좌석’: 0, ‘1B 좌석’: 1, …, }, 
+| ‘칸 번호 2’: { …, } }, 
+| ‘정거장 B’: { … }, 
+| … 
+| }</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.parser.parsing_raw_srcar_length">
+<code class="sig-prename descclassname">kopper.parser.</code><code class="sig-name descname">parsing_raw_srcar_length</code><span class="sig-paren">(</span><em class="sig-param">raw_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/parser.html#parsing_raw_srcar_length"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.parser.parsing_raw_srcar_length" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차가 이루고 있는 칸 번호 요청에 대한 응답 결과를 파싱.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>raw_html (str): Crawler.train_srcar_length 얻은 HTML source.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: [1, 2, 3, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.parser.parsing_raw_train_stations">
+<code class="sig-prename descclassname">kopper.parser.</code><code class="sig-name descname">parsing_raw_train_stations</code><span class="sig-paren">(</span><em class="sig-param">raw_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/parser.html#parsing_raw_train_stations"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.parser.parsing_raw_train_stations" title="Permalink to this definition">¶</a></dt>
+<dd><p>선택한 기차가 통과하는 정거장 목록 요청에 대한 응답 결과를 파싱.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>raw_html (str): Crawler.train_stations에서 얻은 HTML source.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: [{“key”: “value”, …}, {…}, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.parser.parsing_raw_trains_info">
+<code class="sig-prename descclassname">kopper.parser.</code><code class="sig-name descname">parsing_raw_trains_info</code><span class="sig-paren">(</span><em class="sig-param">raw_html</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/parser.html#parsing_raw_trains_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.parser.parsing_raw_trains_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>출발날짜, 출발시간, 출발역, 도착역, 기차유형 요청에 대한 응답 결과를 파싱.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>raw_html (str): Crawler.trains_info에서 얻은 HTML source.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: [{“key”: “value”, …}, {…}, …]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html">Usage</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kopper.html">Submodules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kopper.algorithms.html">kopper.algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.crawler.html">kopper.crawler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.helper.html">kopper.helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.kopper.html">kopper.kopper</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kopper.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.schedule.html">kopper.schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.station.html">kopper.station</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.train.html">kopper.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.html#module-kopper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="kopper.html">Submodules</a><ul>
+      <li>Previous: <a href="kopper.kopper.html" title="previous chapter">kopper.kopper</a></li>
+      <li>Next: <a href="kopper.schedule.html" title="next chapter">kopper.schedule</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/kopper.parser.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

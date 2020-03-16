@@ -1,0 +1,164 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.helper &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.helper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">station</span> <span class="kn">import</span> <span class="n">Station</span>
+
+
+<div class="viewcode-block" id="get_name_from_code"><a class="viewcode-back" href="../../kopper.helper.html#kopper.helper.get_name_from_code">[docs]</a><span class="k">def</span> <span class="nf">get_name_from_code</span><span class="p">(</span><span class="n">enum_cls</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;constants에 있는 enum 클래스의 키 값 반환.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        constants.enum_class (Enum): Enum이 상속된 클래스</span>
+<span class="sd">        constants.enum_class.value (Enum.value): Enum이 상속된 클래스 value 값</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        str: constants.enum_class.key, value 값과 일치하는 key 값</span>
+
+<span class="sd">    &gt;&gt;&gt; from constants.days import DAYS</span>
+<span class="sd">    &gt;&gt;&gt; get_name_from_code(DAYS, 0)</span>
+<span class="sd">    &#39;월&#39;</span>
+
+<span class="sd">    &gt;&gt;&gt; from constants.train_type import TRAIN_TYPE</span>
+<span class="sd">    &gt;&gt;&gt; get_name_from_code(TRAIN_TYPE, &#39;09&#39;)</span>
+<span class="sd">    &#39;ITX_청춘&#39;</span>
+<span class="sd">    &gt;&gt;&gt; get_name_from_code(TRAIN_TYPE, &#39;10&#39;)</span>
+<span class="sd">    &#39;ITX_청춘&#39;</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">names_single</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_cls</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="n">code</span>
+    <span class="p">]</span>
+    <span class="n">names_multiple</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">name</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">member</span> <span class="ow">in</span> <span class="n">enum_cls</span><span class="o">.</span><span class="n">__members__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="nb">tuple</span> <span class="ow">and</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">member</span><span class="o">.</span><span class="n">value</span>
+    <span class="p">]</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">names_single</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">names_multiple</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;Trains information is not enough.</span>
+<span class="s2">            Please, add info(name, code) in &#39;enum/trains.py&#39;.</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">names_single</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">names_single</span><span class="p">)</span> <span class="k">else</span> <span class="n">names_multiple</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="get_stations"><a class="viewcode-back" href="../../kopper.helper.html#kopper.helper.get_stations">[docs]</a><span class="k">def</span> <span class="nf">get_stations</span><span class="p">(</span><span class="n">parsed_train_stations</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;선택한 기차가 통과하는 정거장에 대한 인스턴스 일괄 생성.</span>
+<span class="sd">    </span>
+<span class="sd">    일괄 생성된 정거장 인스턴스들은 Schedule 클래스에서 Argument로 사용.</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+<span class="sd">        parsed_train_stations: helper.parsing_raw_train_stations에서 반환된 파싱 정보. </span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        list: [&lt;class &#39;station.Station&#39;&gt;, &lt;class &#39;station.Station&#39;&gt;, ...]</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        Crawler.train_stations에서 선택한 기차의 시간표 정보(HTML source)로 얻은 뒤, helper.parsing_raw_train_stations에서 파싱된 정보를 인자로 사용합니다.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="n">Station</span><span class="p">(</span><span class="n">raw_station_info</span><span class="p">)</span> <span class="k">for</span> <span class="n">raw_station_info</span> <span class="ow">in</span> <span class="n">parsed_train_stations</span>
+    <span class="p">]</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

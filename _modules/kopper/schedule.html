@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.schedule &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.schedule</h1><div class="highlight"><pre>
+<div class="viewcode-block" id="Schedule"><a class="viewcode-back" href="../../kopper.schedule.html#kopper.schedule.Schedule">[docs]</a><span></span><span class="k">class</span> <span class="nc">Schedule</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;기차 운행 정보</span>
+
+<span class="sd">    Atrributes:</span>
+<span class="sd">        train_routes: 선택한 기차 통과 정거장</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">stations</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train</span> <span class="o">=</span> <span class="n">train</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_stations</span> <span class="o">=</span> <span class="n">stations</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">sorted_stations</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_stations</span><span class="p">)</span>
+
+        <span class="n">train_routes</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="p">(</span><span class="n">station</span><span class="p">,</span> <span class="n">next_station</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span>
+                <span class="nb">zip</span><span class="p">(</span><span class="n">sorted_stations</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">sorted_stations</span><span class="p">[</span><span class="mi">1</span><span class="p">:])):</span>
+            <span class="n">station</span><span class="o">.</span><span class="n">depart_order</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+            <span class="n">station</span><span class="o">.</span><span class="n">arrival_order</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">2</span>
+
+            <span class="n">station</span><span class="o">.</span><span class="n">next_station</span> <span class="o">=</span> <span class="n">next_station</span>
+
+            <span class="n">train_routes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">station</span><span class="p">)</span>
+
+        <span class="n">order_depart</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">order_arrival</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">train_routes</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">order_idx</span><span class="p">,</span> <span class="n">station</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_routes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="o">.</span><span class="n">depart_station_code</span><span class="p">))</span> <span class="o">==</span> <span class="n">station</span><span class="o">.</span><span class="n">station_code</span><span class="p">:</span>
+                <span class="n">order_depart</span> <span class="o">=</span> <span class="n">order_idx</span>
+                <span class="k">break</span>
+
+        <span class="k">for</span> <span class="n">order_idx</span><span class="p">,</span> <span class="n">station</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">train_routes</span><span class="p">):</span>
+            <span class="k">if</span> <span class="s1">&#39;</span><span class="si">{:04d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_train</span><span class="o">.</span><span class="n">arrival_station_code</span><span class="p">)</span>
+                               <span class="p">)</span> <span class="o">==</span> <span class="n">station</span><span class="o">.</span><span class="n">next_station_code</span><span class="p">:</span>
+                <span class="n">order_arrival</span> <span class="o">=</span> <span class="n">order_idx</span>
+                <span class="k">break</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_routes</span> <span class="o">=</span> <span class="n">train_routes</span><span class="p">[</span><span class="n">order_depart</span><span class="p">:</span><span class="n">order_arrival</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Schedule.print_routes"><a class="viewcode-back" href="../../kopper.schedule.html#kopper.schedule.Schedule.print_routes">[docs]</a>    <span class="k">def</span> <span class="nf">print_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depart_station_idx</span><span class="p">,</span> <span class="n">arrival_station_idx</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;train_routes의 정차역을 index를 통해 정보를 출력합니다.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            deaprt_station_idx: 출발 정차역 index</span>
+<span class="sd">            arrival_station_idx: 도착 정차역 index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">depart_station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_routes</span><span class="p">[</span><span class="n">depart_station_idx</span><span class="p">]</span>
+        <span class="n">arrival_station</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_routes</span><span class="p">[</span><span class="n">arrival_station_idx</span><span class="p">]</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">) - </span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="n">depart_station</span><span class="o">.</span><span class="n">station_name</span><span class="p">,</span>
+            <span class="n">depart_station</span><span class="o">.</span><span class="n">depart_time</span><span class="p">,</span>
+            <span class="n">arrival_station</span><span class="o">.</span><span class="n">next_station</span><span class="o">.</span><span class="n">station_name</span><span class="p">,</span>
+            <span class="n">arrival_station</span><span class="o">.</span><span class="n">next_station</span><span class="o">.</span><span class="n">arrival_time</span><span class="p">,</span>
+        <span class="p">))</span></div>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_sorted_routes</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># 서울 (14:00) - 광명 (14:14)</span>
+        <span class="c1"># 광명 (14:16) - 오송 (14:43)</span>
+        <span class="c1"># 오송 (14:45) - 대전 (15:00)</span>
+        <span class="c1"># 대전 (15:02) - 동대구 (15:45)</span>
+        <span class="c1"># 동대구 (15:47) - 부산 (16:27)</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">for</span> <span class="n">depart_route</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_routes</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">) - </span><span class="si">{}</span><span class="s1"> (</span><span class="si">{}</span><span class="s1">) </span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">depart_route</span><span class="o">.</span><span class="n">station_name</span><span class="p">,</span> <span class="n">depart_route</span><span class="o">.</span><span class="n">depart_time</span><span class="p">,</span>
+                <span class="n">depart_route</span><span class="o">.</span><span class="n">next_station</span><span class="o">.</span><span class="n">station_name</span><span class="p">,</span>
+                <span class="n">depart_route</span><span class="o">.</span><span class="n">next_station</span><span class="o">.</span><span class="n">arrival_time</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">msg</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,149 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.train &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="kopper.station" href="kopper.station.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kopper.train">
+<span id="kopper-train"></span><h1>kopper.train<a class="headerlink" href="#module-kopper.train" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="kopper.train.Train">
+<em class="property">class </em><code class="sig-prename descclassname">kopper.train.</code><code class="sig-name descname">Train</code><span class="sig-paren">(</span><em class="sig-param">raw_train_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/train.html#Train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.train.Train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>기차 상세 정보: Schedule에 등록하여 Train 정보를 사용합니다.</p>
+<dl>
+<dt>Attributes:</dt><dd><p>depart_date (str): 출발 일자
+arrival_date (str): 도착일자</p>
+<p>depart_station_name: 출발역 이름
+arrival_station_name: 도착역 이름</p>
+<p>depart_station_code: 출발역 코드 번호
+arrival_station_code: 도착역 코드 번호</p>
+<p>depart_time: 출발 시간
+arrival_time: 도착 시간
+delay_hour: 지연 시간(분)</p>
+<p>train_no: 기차 번호
+train_type_code: 기차 유형 코드 번호
+train_type_name: 기차 유형 이름
+run_date: 기차 운행 일자</p>
+<p>raw_train_info: 기차 관련 원본 HTML source
+train_group_code: 기차 그룹 코드
+train_classification_code: 기차 분류 코드</p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html">Usage</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kopper.html">Submodules</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="kopper.algorithms.html">kopper.algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.crawler.html">kopper.crawler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.helper.html">kopper.helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.kopper.html">kopper.kopper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.parser.html">kopper.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.schedule.html">kopper.schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.station.html">kopper.station</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kopper.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.html#module-kopper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="kopper.html">Submodules</a><ul>
+      <li>Previous: <a href="kopper.station.html" title="previous chapter">kopper.station</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/kopper.train.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

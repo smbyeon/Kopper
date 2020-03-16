@@ -1,0 +1,20 @@
+Submodules
+==========
+
+.. toctree::
+
+   kopper.algorithms
+   kopper.crawler
+   kopper.helper
+   kopper.kopper
+   kopper.parser
+   kopper.schedule
+   kopper.station
+   kopper.train
+
+Module contents
+---------------
+
+.. automodule:: kopper
+   :members:
+   :show-inheritance:

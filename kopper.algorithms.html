@@ -1,0 +1,268 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.algorithms &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="kopper.crawler" href="kopper.crawler.html" />
+    <link rel="prev" title="Submodules" href="kopper.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-kopper.algorithms">
+<span id="kopper-algorithms"></span><h1>kopper.algorithms<a class="headerlink" href="#module-kopper.algorithms" title="Permalink to this headline">¶</a></h1>
+<dl class="function">
+<dt id="kopper.algorithms.get_routes_idx">
+<code class="sig-prename descclassname">kopper.algorithms.</code><code class="sig-name descname">get_routes_idx</code><span class="sig-paren">(</span><em class="sig-param">graph</em>, <em class="sig-param">step=2</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/algorithms.html#get_routes_idx"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.algorithms.get_routes_idx" title="Permalink to this definition">¶</a></dt>
+<dd><div class="line-block">
+<div class="line">예약 가능한 좌석 구간의 (출발지, 도착지) index 값 반환.  </div>
+<div class="line">Schedule 클래스에서 구간 정보를 출력할 때 사용하는 index 값.</div>
+</div>
+<dl class="simple">
+<dt>Args:</dt><dd><p>graph: make_graph에서 생성한 그래프</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: | [ (출발지1, 도착지1), (출발지2, 도착지2), …]  
+| 도착지1과 출발지2는 같은 정거장.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.algorithms.make_graph">
+<code class="sig-prename descclassname">kopper.algorithms.</code><code class="sig-name descname">make_graph</code><span class="sig-paren">(</span><em class="sig-param">parsed_seats_info</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/algorithms.html#make_graph"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.algorithms.make_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>파싱한 seats_info에서 예약 가능한 좌석 구간을 확인하기 위해 그래프 생성.</p>
+<dl>
+<dt>Args:</dt><dd><p>parsed_seats_info (dict): helper.parsing_raw_seats_info_by_schedule에서 반환된 파싱 정보.</p>
+</dd>
+<dt>Returns:</dt><dd><p>list: 2D-list graph</p>
+</dd>
+<dt>Notes:</dt><dd><div class="line-block">
+<div class="line">Crawler.train_seats_by_schedule에서 행선지 위의 모든 좌석 정보(HTML source)를 얻은 뒤,  </div>
+<div class="line">helper.parsing_raw_seats_info_by_schedule에서 파싱된 정보를 인자로 사용합니다.</div>
+</div>
+</dd>
+</dl>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 15%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+<col style="width: 5%" />
+</colgroup>
+<tbody>
+<tr class="row-odd"><td></td>
+<td colspan="4"><p>srcar. 1</p></td>
+<td colspan="4"><p>srcar. 2</p></td>
+<td colspan="4"><p>srcar. 3</p></td>
+<td colspan="4"><p>srcar. 4</p></td>
+</tr>
+<tr class="row-even"><td><p>route. 1</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+</tr>
+<tr class="row-odd"><td><p>route. 2</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+</tr>
+<tr class="row-even"><td><p>route. 3</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+</tr>
+<tr class="row-odd"><td><p>route. 4</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+<td><p>1A</p></td>
+<td><p>1B</p></td>
+<td><p>1C</p></td>
+<td><p>1D</p></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="kopper.algorithms.natural_keys">
+<code class="sig-prename descclassname">kopper.algorithms.</code><code class="sig-name descname">natural_keys</code><span class="sig-paren">(</span><em class="sig-param">text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/kopper/algorithms.html#natural_keys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#kopper.algorithms.natural_keys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reference: <a class="reference external" href="https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside">https://stackoverflow.com/questions/5967500/how-to-correctly-sort-a-string-with-a-number-inside</a>
+alist.sort(key=natural_keys) sorts in human order
+<a class="reference external" href="http://nedbatchelder.com/blog/200712/human_sorting.html">http://nedbatchelder.com/blog/200712/human_sorting.html</a>
+(See Toothy’s implementation in the comments)</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="includeme.html">Usage</a></li>
+</ul>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="kopper.html">Submodules</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">kopper.algorithms</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.crawler.html">kopper.crawler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.helper.html">kopper.helper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.kopper.html">kopper.kopper</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.parser.html">kopper.parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.schedule.html">kopper.schedule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.station.html">kopper.station</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.train.html">kopper.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="kopper.html#module-kopper">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="kopper.html">Submodules</a><ul>
+      <li>Previous: <a href="kopper.html" title="previous chapter">Submodules</a></li>
+      <li>Next: <a href="kopper.crawler.html" title="next chapter">kopper.crawler</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/kopper.algorithms.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,6 @@
+kopper.kopper
+====================
+
+.. automodule:: kopper.kopper
+   :members:
+   :show-inheritance:

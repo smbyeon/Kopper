@@ -1,0 +1,6 @@
+kopper.algorithms
+========================
+
+.. automodule:: kopper.algorithms
+   :members:
+   :show-inheritance:

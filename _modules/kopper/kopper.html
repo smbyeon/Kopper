@@ -1,0 +1,199 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.kopper &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.kopper</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">algorithms</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">crawler</span> <span class="kn">import</span> <span class="n">Crawler</span>
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">parser</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">schedule</span> <span class="kn">import</span> <span class="n">Schedule</span>
+<span class="kn">from</span> <span class="nn">train</span> <span class="kn">import</span> <span class="n">Train</span>
+
+
+<div class="viewcode-block" id="Kopper"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper">[docs]</a><span class="k">class</span> <span class="nc">Kopper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Kopper 메인 클래스</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_crawler</span> <span class="o">=</span> <span class="n">Crawler</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Kopper.trains_info"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper.trains_info">[docs]</a>    <span class="k">def</span> <span class="nf">trains_info</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">depart_date</span><span class="p">,</span> <span class="n">depart_time</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">arrival</span><span class="p">,</span>
+                    <span class="n">train_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;출발일자, 출발시간, 출발역, 도착역, 기차 유형을 요청한 결과 반환.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            depart_date (str): 출발일자(YYYYmmdd)</span>
+<span class="sd">            depart_time (str): 출발시간(HHMMSS)</span>
+<span class="sd">            depart (STATIONS.value): 출발역</span>
+<span class="sd">            arrival (STATIONS.value): 출발역</span>
+<span class="sd">            train_type (TRAIN_TYPE.value): 기차 유형</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: [&lt;class &#39;train.Train&#39;&gt;, ...]</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">status_code</span><span class="p">,</span> <span class="n">raw_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crawler</span><span class="o">.</span><span class="n">trains_info</span><span class="p">(</span>
+            <span class="n">depart_date</span><span class="p">,</span> <span class="n">depart_time</span><span class="p">,</span> <span class="n">depart</span><span class="p">,</span> <span class="n">arrival</span><span class="p">,</span> <span class="n">train_type</span><span class="p">)</span>
+        <span class="n">parsed_trains_info</span> <span class="o">=</span> <span class="n">parsing_raw_trains_info</span><span class="p">(</span><span class="n">raw_html</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="p">[</span>
+            <span class="n">Train</span><span class="p">(</span><span class="n">parsed_train_info</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">parsed_train_info</span> <span class="ow">in</span> <span class="n">parsed_trains_info</span>
+        <span class="p">]</span></div>
+
+<div class="viewcode-block" id="Kopper.train_schedule"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper.train_schedule">[docs]</a>    <span class="k">def</span> <span class="nf">train_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 시간표를 요청한 결과 반환.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            &lt;class &#39;schedule.Schedule&#39;&gt;</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">status_code</span><span class="p">,</span> <span class="n">raw_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crawler</span><span class="o">.</span><span class="n">train_stations</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+        <span class="n">parsed_train_stations</span> <span class="o">=</span> <span class="n">parsing_raw_train_stations</span><span class="p">(</span><span class="n">raw_html</span><span class="p">)</span>
+        <span class="n">train_stations</span> <span class="o">=</span> <span class="n">get_stations</span><span class="p">(</span><span class="n">parsed_train_stations</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">Schedule</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">train_stations</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Kopper.train_srcar_length"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper.train_srcar_length">[docs]</a>    <span class="k">def</span> <span class="nf">train_srcar_length</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 칸 번호를 요청한 결과 반환.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: 기차 칸 번호 리스트</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">status_code</span><span class="p">,</span> <span class="n">raw_html</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crawler</span><span class="o">.</span><span class="n">train_srcar_length</span><span class="p">(</span><span class="n">train</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsing_raw_srcar_length</span><span class="p">(</span><span class="n">raw_html</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Kopper.train_seats_by_schedule"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper.train_seats_by_schedule">[docs]</a>    <span class="k">def</span> <span class="nf">train_seats_by_schedule</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">train</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">srcar_length</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;선택한 기차 정보와 운행 시간표를 참고하여 일괄적으로 좌석 상태를 요청하고 결과 반환.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            train (class &#39;train.Train&#39;): 기차 인스턴스</span>
+<span class="sd">            schedule (class &#39;schedule.Schedule&#39;): 기차 시간표 인스턴스</span>
+<span class="sd">            srcar_length (list): 기차 칸 번호 리스트</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: | { &#39;정거장 A&#39;: { &#39;칸 번호 1&#39;: { &#39;1A 좌석&#39;: 0, &#39;1B 좌석&#39;: 1, ..., }, </span>
+<span class="sd">            | &#39;칸 번호 2&#39;: { ..., } }, </span>
+<span class="sd">            | &#39;정거장 B&#39;: { ... }, </span>
+<span class="sd">            | ... </span>
+<span class="sd">            | }</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">raw_train_seats_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_crawler</span><span class="o">.</span><span class="n">train_seats_by_schedule</span><span class="p">(</span>
+            <span class="n">train</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">srcar_length</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parsing_raw_seats_by_schedule</span><span class="p">(</span><span class="n">raw_train_seats_info</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Kopper.report_routes"><a class="viewcode-back" href="../../kopper.kopper.html#kopper.kopper.Kopper.report_routes">[docs]</a>    <span class="k">def</span> <span class="nf">report_routes</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule</span><span class="p">,</span> <span class="n">parsed_seats_info</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;train_routes의 정차역을 index를 통해 정보를 출력합니다.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            deaprt_station_idx: 출발 정차역 index</span>
+<span class="sd">            arrival_station_idx: 도착 정차역 index</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">graph</span> <span class="o">=</span> <span class="n">make_graph</span><span class="p">(</span><span class="n">parsed_seats_info</span><span class="p">)</span>
+        <span class="n">list_route_indexs</span> <span class="o">=</span> <span class="n">get_routes_idx</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">route_indexs</span> <span class="ow">in</span> <span class="n">list_route_indexs</span><span class="p">:</span>
+            <span class="n">schedule</span><span class="o">.</span><span class="n">print_routes</span><span class="p">(</span><span class="n">route_indexs</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">route_indexs</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

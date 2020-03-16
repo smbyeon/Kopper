@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>kopper.train &#8212; kopper  documentation</title>
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <script id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script async="async" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for kopper.train</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">constants.train_type</span> <span class="kn">import</span> <span class="n">TRAIN_TYPE</span>
+<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">get_name_from_code</span>
+
+
+<div class="viewcode-block" id="Train"><a class="viewcode-back" href="../../kopper.train.html#kopper.train.Train">[docs]</a><span class="k">class</span> <span class="nc">Train</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;기차 상세 정보: Schedule에 등록하여 Train 정보를 사용합니다.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        depart_date (str): 출발 일자</span>
+<span class="sd">        arrival_date (str): 도착일자</span>
+
+<span class="sd">        depart_station_name: 출발역 이름</span>
+<span class="sd">        arrival_station_name: 도착역 이름</span>
+
+<span class="sd">        depart_station_code: 출발역 코드 번호</span>
+<span class="sd">        arrival_station_code: 도착역 코드 번호</span>
+
+<span class="sd">        depart_time: 출발 시간</span>
+<span class="sd">        arrival_time: 도착 시간</span>
+<span class="sd">        delay_hour: 지연 시간(분)</span>
+
+<span class="sd">        train_no: 기차 번호</span>
+<span class="sd">        train_type_code: 기차 유형 코드 번호</span>
+<span class="sd">        train_type_name: 기차 유형 이름</span>
+<span class="sd">        run_date: 기차 운행 일자</span>
+
+<span class="sd">        raw_train_info: 기차 관련 원본 HTML source</span>
+<span class="sd">        train_group_code: 기차 그룹 코드</span>
+<span class="sd">        train_classification_code: 기차 분류 코드</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_train_info</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_raw_train_info</span> <span class="o">=</span> <span class="n">raw_train_info</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_initialize</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_initialize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">raw_info</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">raw_train_info</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_arv_dt&#39;</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_station_code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_arv_rs_stn_cd&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_station_name</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_arv_rs_stn_cd_nm&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_arv_tm&#39;</span><span class="p">],</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depart_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_dpt_dt&#39;</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depart_station_code</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">{:02d}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="nb">int</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_dpt_rs_stn_cd&#39;</span><span class="p">]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depart_station_name</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_dpt_rs_stn_cd_nm&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_depart_time</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_dpt_tm&#39;</span><span class="p">],</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_no</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_trn_no&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_type_code</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_trn_clsf_cd&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_type_name</span> <span class="o">=</span> <span class="n">get_name_from_code</span><span class="p">(</span><span class="n">TRAIN_TYPE</span><span class="p">,</span>
+                                                   <span class="bp">self</span><span class="o">.</span><span class="n">_train_type_code</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_group_code</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_trn_gp_cd&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_train_classification_code</span> <span class="o">=</span> <span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_trn_clsf_cd&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_run_date</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_run_dt&#39;</span><span class="p">],</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_delay_hour</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strptime</span><span class="p">(</span><span class="n">raw_info</span><span class="p">[</span><span class="s1">&#39;h_dlay_hr&#39;</span><span class="p">],</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">raw_train_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_raw_train_info</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">arrival_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arrival_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">arrival_station_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_station_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">arrival_station_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_arrival_station_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">arrival_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_arrival_time</span><span class="p">,</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depart_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_depart_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depart_station_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depart_station_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depart_station_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_depart_station_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">depart_time</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_depart_time</span><span class="p">,</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_no</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_no</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_type_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_type_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_type_name</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_type_name</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_group_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_group_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">train_classification_code</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_train_classification_code</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">run_date</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_date</span><span class="p">,</span> <span class="s1">&#39;%Y%m</span><span class="si">%d</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">delay_hour</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">datetime</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_delay_hour</span><span class="p">,</span> <span class="s1">&#39;%H%M%S&#39;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># No.00101 \t KTX \t 서울(05:15) ------ 부산(07:51)</span>
+        <span class="k">return</span> <span class="s1">&#39;No.</span><span class="si">{}</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> </span><span class="si">{}</span><span class="s1"> </span><span class="se">\t</span><span class="s1"> </span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">) ------ </span><span class="si">{}</span><span class="s1">(</span><span class="si">{}</span><span class="s1">)&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">train_no</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">train_type_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">depart_station_name</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">depart_time</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_station_name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">arrival_time</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="vm">__dict__</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../index.html">kopper</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../includeme.html">Usage</a></li>
+</ul>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../kopper.html">Submodules</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2020, Seongmok Byeon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.4.0</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
