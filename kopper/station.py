@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 
-from constants.stations import STATIONS
+from kopper.constants.stations import STATIONS
 
 
 class Station(object):
@@ -8,15 +8,25 @@ class Station(object):
 
     Attributes:
         station_name: 역 이름
+
         station_code: 역 코드 번호
+        
         arrival_time: 도착 시간
+        
         depart_time: 출발 시간
+        
         delayed_arrival_time: 지연된 도착 시간
+        
         delay_minutes: 지연 시간(분)
+        
         depart_order: 출발 순서
+        
         arrival_order: 도착 순서
+        
         next_station_code: 다음 정거장 코드 번호
+        
         next_station_name: 다음 정거장 이름
+
         seats_info: 좌석 정보
     """
     def __init__(self, raw_station_info):

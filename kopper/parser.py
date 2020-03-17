@@ -1,7 +1,7 @@
 from bs4 import BeautifulSoup
 import re
 
-from constants.parsing_map import PARSING_MAP
+from kopper.constants.parsing_map import PARSING_MAP
 
 
 def parsing_raw_trains_info(raw_html):

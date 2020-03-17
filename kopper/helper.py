@@ -1,4 +1,4 @@
-from station import Station
+from kopper.station import Station
 
 
 def get_name_from_code(enum_cls, code):

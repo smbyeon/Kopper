@@ -2,13 +2,13 @@ from datetime import datetime
 from requests import Session
 import requests
 
-from helper import get_name_from_code
+from kopper.helper import get_name_from_code
 
-from constants.days import DAYS
-from constants.links import LINKS
-from constants.parameters import PARAMETERS
-from constants.stations import STATIONS
-from constants.train_type import TRAIN_TYPE
+from kopper.constants.days import DAYS
+from kopper.constants.links import LINKS
+from kopper.constants.parameters import PARAMETERS
+from kopper.constants.stations import STATIONS
+from kopper.constants.train_type import TRAIN_TYPE
 
 
 class Crawler(object):

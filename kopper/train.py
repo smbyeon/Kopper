@@ -1,33 +1,43 @@
 from datetime import datetime
 
-from constants.train_type import TRAIN_TYPE
-from helper import get_name_from_code
+from kopper.constants.train_type import TRAIN_TYPE
+from kopper.helper import get_name_from_code
 
 
 class Train(object):
-    """기차 상세 정보: Schedule에 등록하여 Train 정보를 사용합니다.
+    """기차 상세 정보: Schedule에 등록하여e Train 정보를 사용합니다.
 
     Attributes:
         depart_date (str): 출발 일자
+        
         arrival_date (str): 도착일자
 
         depart_station_name: 출발역 이름
+        
         arrival_station_name: 도착역 이름
 
         depart_station_code: 출발역 코드 번호
+        
         arrival_station_code: 도착역 코드 번호
 
         depart_time: 출발 시간
+        
         arrival_time: 도착 시간
+        
         delay_hour: 지연 시간(분)
 
         train_no: 기차 번호
+        
         train_type_code: 기차 유형 코드 번호
+        
         train_type_name: 기차 유형 이름
+        
         run_date: 기차 운행 일자
 
         raw_train_info: 기차 관련 원본 HTML source
+        
         train_group_code: 기차 그룹 코드
+        
         train_classification_code: 기차 분류 코드
     """
 

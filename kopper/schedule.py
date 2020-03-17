@@ -1,7 +1,7 @@
 class Schedule(object):
     """기차 운행 정보
 
-    Atrributes:
+    Attributes:
         train_routes: 선택한 기차 통과 정거장
     """
     def __init__(self, train, stations):

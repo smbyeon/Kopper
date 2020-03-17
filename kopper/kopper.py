@@ -1,9 +1,9 @@
-from algorithms import *
-from crawler import Crawler
-from helper import *
-from parser import *
-from schedule import Schedule
-from train import Train
+from kopper.algorithms import *
+from kopper.crawler import Crawler
+from kopper.helper import *
+from kopper.parser import *
+from kopper.schedule import Schedule
+from kopper.train import Train
 
 
 class Kopper(object):

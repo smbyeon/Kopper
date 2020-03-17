@@ -19,9 +19,7 @@
 
 .. code:: python
 
-    from constants.stations import *
-    from constants.train_type import *
-    from kopper import Kopper
+    from kopper import *
 
     kopper = Kopper()
 
@@ -71,7 +69,7 @@
 
 .. code:: python
 
-    selected_train_srcar_length = kopper.train_srcar_length(selected_train)
+    selected_train_srcar_length = kopper.train_srcar_length(selected_train_info)
 
     print(selected_train_srcar_length)
 
@@ -85,7 +83,7 @@
 .. code:: python
 
     # 보통 약 10 ~ 20초 정도 크롤링 시간 소요
-    dict_selected_train_seats = kopper.train_seats_by_schedule(selected_train, selected_train_schedule, selected_train_srcar_length)
+    dict_selected_train_seats = kopper.train_seats_by_schedule(selected_train_info, selected_train_schedule, selected_train_srcar_length)
 
     kopper.report_routes(selected_train_schedule, dict_selected_train_seats)
 
