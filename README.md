@@ -2,20 +2,25 @@
 출발역에서 도착역까지 예매를 할 수 없는 경우 중간 정차역을 껴서 예매가
 가능한 구간이 있는 지 확인하는 코드입니다.
 
-              $Seat_{n-1}$    $Seat_{n}$    $Seat_{n+1}$    $Seat_{n+k}$
-  ----------- --------------- ------------- --------------- ---------------
-  서울-천안   X               O             X               X
-  천안-부산   X               X             O               X
+|            | $Seat_{n-1}$ | $Seat_{n}$ | $Seat_{n+1}$ | $Seat_{n+k}$ |
+|----------- | ------------ | ---------- | ------------ | ------------ |
+| 서울-천안 | X | O | X | X |
+| 천안-부산 | X | X | O | X |
 
-서울에서 부산까지 완전히 비어있는 좌석이 없으므로 예약할 수 없지만,
-(서울 - 천안), (천안 - 부산) 구간에서 티켓을 구매할 수 있습니다.
+서울에서 부산까지 완전히 비어있는 좌석이 없으므로 예약할 수 없지만, (서울 - 천안), (천안 - 부산) 구간에서 티켓을 구매할 수 있습니다.
 
 * * * * *
 
-1. 기차 정보 조회
-=================
+## 0. 설치
 
-``` {.sourceCode .python}
+```bash
+$ pip install kopper
+```
+
+
+## 1. 기차 정보 조회
+
+```python
 from kopper import *
 
 kopper = Kopper()
@@ -41,10 +46,10 @@ No.00119     KTX_산천      광명(095100) ------ 부산(122400)
 """
 ```
 
-2. 기차 시간표 조회
-===================
 
-``` {.sourceCode .python}
+## 2. 기차 시간표 조회
+
+```python
 # 기차 선택
 selected_train_info = trains_info[0]
 
@@ -62,10 +67,10 @@ print(selected_train_schedule)
 """
 ```
 
-3. 선택한 기차 칸 번호 조회
-===========================
 
-``` {.sourceCode .python}
+## 3. 선택한 기차 칸 번호 조회
+
+```python
 selected_train_srcar_length = kopper.train_srcar_length(selected_train_info)
 
 print(selected_train_srcar_length)
@@ -75,10 +80,10 @@ print(selected_train_srcar_length)
 """
 ```
 
-4. 예매할 수 있는 구간 출력
-===========================
 
-``` {.sourceCode .python}
+## 4. 예매할 수 있는 구간 출력
+
+```python
 # 보통 약 10 ~ 20초 정도 크롤링 시간 소요
 dict_selected_train_seats = kopper.train_seats_by_schedule(selected_train_info, selected_train_schedule, selected_train_srcar_length)
 
