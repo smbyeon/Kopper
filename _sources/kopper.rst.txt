@@ -11,10 +11,3 @@ Submodules
    kopper.schedule
    kopper.station
    kopper.train
-
-Module contents
----------------
-
-.. automodule:: kopper
-   :members:
-   :show-inheritance:

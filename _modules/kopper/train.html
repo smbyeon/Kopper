@@ -34,34 +34,44 @@
   <h1>Source code for kopper.train</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
 
-<span class="kn">from</span> <span class="nn">constants.train_type</span> <span class="kn">import</span> <span class="n">TRAIN_TYPE</span>
-<span class="kn">from</span> <span class="nn">helper</span> <span class="kn">import</span> <span class="n">get_name_from_code</span>
+<span class="kn">from</span> <span class="nn">kopper.constants.train_type</span> <span class="kn">import</span> <span class="n">TRAIN_TYPE</span>
+<span class="kn">from</span> <span class="nn">kopper.helper</span> <span class="kn">import</span> <span class="n">get_name_from_code</span>
 
 
 <div class="viewcode-block" id="Train"><a class="viewcode-back" href="../../kopper.train.html#kopper.train.Train">[docs]</a><span class="k">class</span> <span class="nc">Train</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;기차 상세 정보: Schedule에 등록하여 Train 정보를 사용합니다.</span>
+    <span class="sd">&quot;&quot;&quot;기차 상세 정보: Schedule에 등록하여e Train 정보를 사용합니다.</span>
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        depart_date (str): 출발 일자</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_date (str): 도착일자</span>
 
 <span class="sd">        depart_station_name: 출발역 이름</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_station_name: 도착역 이름</span>
 
 <span class="sd">        depart_station_code: 출발역 코드 번호</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_station_code: 도착역 코드 번호</span>
 
 <span class="sd">        depart_time: 출발 시간</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_time: 도착 시간</span>
+<span class="sd">        </span>
 <span class="sd">        delay_hour: 지연 시간(분)</span>
 
 <span class="sd">        train_no: 기차 번호</span>
+<span class="sd">        </span>
 <span class="sd">        train_type_code: 기차 유형 코드 번호</span>
+<span class="sd">        </span>
 <span class="sd">        train_type_name: 기차 유형 이름</span>
+<span class="sd">        </span>
 <span class="sd">        run_date: 기차 운행 일자</span>
 
 <span class="sd">        raw_train_info: 기차 관련 원본 HTML source</span>
+<span class="sd">        </span>
 <span class="sd">        train_group_code: 기차 그룹 코드</span>
+<span class="sd">        </span>
 <span class="sd">        train_classification_code: 기차 분류 코드</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 

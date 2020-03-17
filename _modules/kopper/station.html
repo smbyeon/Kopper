@@ -34,7 +34,7 @@
   <h1>Source code for kopper.station</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 
-<span class="kn">from</span> <span class="nn">constants.stations</span> <span class="kn">import</span> <span class="n">STATIONS</span>
+<span class="kn">from</span> <span class="nn">kopper.constants.stations</span> <span class="kn">import</span> <span class="n">STATIONS</span>
 
 
 <div class="viewcode-block" id="Station"><a class="viewcode-back" href="../../kopper.station.html#kopper.station.Station">[docs]</a><span class="k">class</span> <span class="nc">Station</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
@@ -42,15 +42,25 @@
 
 <span class="sd">    Attributes:</span>
 <span class="sd">        station_name: 역 이름</span>
+
 <span class="sd">        station_code: 역 코드 번호</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_time: 도착 시간</span>
+<span class="sd">        </span>
 <span class="sd">        depart_time: 출발 시간</span>
+<span class="sd">        </span>
 <span class="sd">        delayed_arrival_time: 지연된 도착 시간</span>
+<span class="sd">        </span>
 <span class="sd">        delay_minutes: 지연 시간(분)</span>
+<span class="sd">        </span>
 <span class="sd">        depart_order: 출발 순서</span>
+<span class="sd">        </span>
 <span class="sd">        arrival_order: 도착 순서</span>
+<span class="sd">        </span>
 <span class="sd">        next_station_code: 다음 정거장 코드 번호</span>
+<span class="sd">        </span>
 <span class="sd">        next_station_name: 다음 정거장 이름</span>
+
 <span class="sd">        seats_info: 좌석 정보</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">raw_station_info</span><span class="p">):</span>

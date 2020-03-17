@@ -72,10 +72,14 @@
 (천안 - 부산) 구간에서 티켓을 구매할 수 있습니다.</p>
 <hr class="docutils" />
 <div class="section" id="id1">
-<h2>1. 기차 정보 조회<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">constants.stations</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">constants.train_type</span> <span class="kn">import</span> <span class="o">*</span>
-<span class="kn">from</span> <span class="nn">kopper</span> <span class="kn">import</span> <span class="n">Kopper</span>
+<h2>0. 설치<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip install kopper
+</pre></div>
+</div>
+</div>
+<div class="section" id="id2">
+<h2>1. 기차 정보 조회<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">kopper</span> <span class="kn">import</span> <span class="o">*</span>
 
 <span class="n">kopper</span> <span class="o">=</span> <span class="n">Kopper</span><span class="p">()</span>
 
@@ -101,8 +105,8 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id2">
-<h2>2. 기차 시간표 조회<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id3">
+<h2>2. 기차 시간표 조회<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 기차 선택</span>
 <span class="n">selected_train_info</span> <span class="o">=</span> <span class="n">trains_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -121,9 +125,9 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id3">
-<h2>3. 선택한 기차 칸 번호 조회<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selected_train_srcar_length</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_srcar_length</span><span class="p">(</span><span class="n">selected_train</span><span class="p">)</span>
+<div class="section" id="id4">
+<h2>3. 선택한 기차 칸 번호 조회<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selected_train_srcar_length</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_srcar_length</span><span class="p">(</span><span class="n">selected_train_info</span><span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">selected_train_srcar_length</span><span class="p">)</span>
 
@@ -133,10 +137,10 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="id4">
-<h2>4. 예매할 수 있는 구간 출력<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>4. 예매할 수 있는 구간 출력<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># 보통 약 10 ~ 20초 정도 크롤링 시간 소요</span>
-<span class="n">dict_selected_train_seats</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_seats_by_schedule</span><span class="p">(</span><span class="n">selected_train</span><span class="p">,</span> <span class="n">selected_train_schedule</span><span class="p">,</span> <span class="n">selected_train_srcar_length</span><span class="p">)</span>
+<span class="n">dict_selected_train_seats</span> <span class="o">=</span> <span class="n">kopper</span><span class="o">.</span><span class="n">train_seats_by_schedule</span><span class="p">(</span><span class="n">selected_train_info</span><span class="p">,</span> <span class="n">selected_train_schedule</span><span class="p">,</span> <span class="n">selected_train_srcar_length</span><span class="p">)</span>
 
 <span class="n">kopper</span><span class="o">.</span><span class="n">report_routes</span><span class="p">(</span><span class="n">selected_train_schedule</span><span class="p">,</span> <span class="n">dict_selected_train_seats</span><span class="p">)</span>
 
